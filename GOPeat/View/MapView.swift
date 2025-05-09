@@ -91,7 +91,7 @@ struct MapView: View {
 
     private func zoomToLocation(_ coordinate: CLLocationCoordinate2D) {
         withAnimation(.easeInOut(duration: 0.5)) {
-            mapOffset = -UIScreen.main.bounds.height * 0.25
+            mapOffset = -UIScreen.main.bounds.height * 0.7
             let region = MKCoordinateRegion(
                 center: coordinate,
                 span: MKCoordinateSpan(latitudeDelta: 0.002, longitudeDelta: 0.002)
@@ -218,7 +218,7 @@ struct MapView: View {
                 CanteenDetail(canteen: canteen, dismissAction: {
                     showDetail = false
                 })
-                .presentationDetents([.medium])
+                .presentationDetents([.fraction(0.8)])
             }
         }
         .sheet(isPresented: Binding(

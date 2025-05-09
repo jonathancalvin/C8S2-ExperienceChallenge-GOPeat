@@ -18,9 +18,8 @@ class FoodFilterViewModel: ObservableObject{
     let categories: [String] = FoodCategory.allCases.map{ $0.rawValue }
     
     init(foods: [Food]) {
-        let tenant = foods.first?.tenant
         var tempfoods = foods
-        let dummy = Food(name: "Dumy", description: "Dumy", categories: [.nonSpicy, .nonGreasy, .nonSweet, .spicy, .greasy, .sweet, .soup, .roast, .savory], tenant: tenant)
+        let dummy = Food(name: "Dumy", description: "Dumy", categories: [.nonSpicy, .nonGreasy, .nonSweet, .spicy, .greasy, .sweet, .soup, .roast, .savory], tenant: nil)
         tempfoods.insert(dummy, at: 0)
         self.foods = tempfoods
         self.filteredFoods = tempfoods
