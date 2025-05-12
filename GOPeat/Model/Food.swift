@@ -33,3 +33,9 @@ enum FoodCategory: String, CaseIterable, Codable {
     case sweet = "Sweet"
     case nonSweet = "Non-Sweet"
 }
+
+extension Food {
+    static var allCategories: [String] {
+        ["Halal", "Non-Halal"] + FoodCategory.allCases.map { $0.rawValue }
+    }
+}

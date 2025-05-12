@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct PreferenceView: View {
+    @State var selectedCategories: [String] = []
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -19,6 +20,7 @@ struct PreferenceView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(width: 200, height: 200)
+                    Spacer()
                     VStack(alignment: .leading, spacing: 20) {
                         VStack(alignment: .leading, spacing: 10) {
                             Text("Hello There")
@@ -29,14 +31,28 @@ struct PreferenceView: View {
                                 .fontWeight(.semibold)
                         }
                         Text("Choose what suits your diet and lifestyle — from halal to non-spicy or anything in between.")
+                        CategoryFilter(categories: Food.allCategories, selectedCategories: $selectedCategories)
                     }
-                    .frame(width: geometry.size.width * 0.7)
-                    .padding(20)
-                    .background(
-                        RoundedRectangle(cornerRadius: 10)
-                            .fill(.white)
-                            .stroke(Color.black, lineWidth: 1)
-                    )
+                        .frame(width: geometry.size.width * 0.7)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 30)
+                        .background(
+                            RoundedRectangle(cornerRadius: 10)
+                                .fill(Color("NonDefault"))
+                                .stroke(Color("Default"), lineWidth: 1)
+                        )
+                    Spacer()
+                    Button("Continue") {
+                        AppStorageManager.shared.fixCategories = selectedCategories
+                    }
+                        .frame(width: geometry.size.width * 0.7)
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .foregroundStyle(Color("NonDefault"))
+                        .background(
+                            Capsule()
+                                .fill(Color("Primary"))
+                        )
                 }
             }
         }
