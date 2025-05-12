@@ -12,32 +12,14 @@ import SwiftData
 struct CanteenDetail: View {
     let canteen: Canteen
     var dismissAction: () -> Void
-    @StateObject var viewModel: TenantSearchViewModel
+    @StateObject var viewModel: ModalSearchViewModel
     
     init(canteen: Canteen, dismissAction: @escaping () -> Void) {
         self.canteen = canteen
         self.dismissAction = dismissAction
-        self._viewModel = StateObject(wrappedValue: TenantSearchViewModel(tenants: canteen.tenants))
+        self._viewModel = StateObject(wrappedValue: ModalSearchViewModel(tenants: canteen.tenants))
     }
 
-//    private func showTenant(tenants: [Tenant]) -> some View {
-//        VStack(alignment: .leading) {
-//            Text("Tenants")
-//                .font(.headline)
-//                .fontWeight(.bold)
-//                .padding(0)
-//            Divider()
-//            if !tenants.isEmpty {
-//                ForEach(tenants) {tenant in
-//                    TenantCard(tenant: tenant, selectedCategories: $viewModel.selectedCategories)
-//                }
-//            } else {
-//                Text("Coming Soon")
-//                    .font(.subheadline)
-//                    .frame(maxWidth: .infinity, alignment: .center)
-//            }
-//        }
-//    }
     
     private func showTenant(tenants: [Tenant]) -> some View {
         VStack(alignment: .leading) {
@@ -122,15 +104,6 @@ struct CanteenDetail: View {
                             .foregroundColor(.secondary)
                         
                         Filter(categories: viewModel.categories, selectedCategories: $viewModel.selectedCategories, maxPrice: $viewModel.maxPrice, isOpenNow: $viewModel.isOpenNow)
-                            .onChange(of: viewModel.selectedCategories) { _, _ in
-                                viewModel.updateFilteredTenant()
-                            }
-                            .onChange(of: viewModel.maxPrice) { _, _ in
-                                viewModel.updateFilteredTenant()
-                            }
-                            .onChange(of: viewModel.isOpenNow) { _, _ in
-                                viewModel.updateFilteredTenant()
-                            }
                     }
                     
                     // Tenants Section
@@ -182,8 +155,3 @@ struct CanteenDetail: View {
     }
 }
 
-//#Preview {
-//    // You'll need to create a dummy Canteen object for the preview
-//    let dummyCanteen = Canteen(name: "Green Eatery", latitude: -6.302180333605081, longitude: 106.65229958867403, image: "GreenEatery", desc: "Modern food court featuring diverse dishes", operationalTime: "Monday - Friday: 6 AM - 9 PM", amenities: ["Disabled Access", "Smoking Area", "Convenience Store"])
-//    return CanteenDetail(canteen: dummyCanteen, dismissAction: {})
-//}

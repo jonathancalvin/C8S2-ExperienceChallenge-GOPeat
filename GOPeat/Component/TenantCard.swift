@@ -52,7 +52,7 @@ struct TenantCard: View {
         .fullScreenCover(isPresented: $showTenantDetail) {
             showTenantDetail = false
         } content: {
-            TenantView(tenant: tenant, foods: tenant.foods, selectedCategories: $selectedCategories)
+            TenantView(tenant: tenant, foods: tenant.foods, selectedCategories: selectedCategories)
         }
 
     }

@@ -77,7 +77,7 @@ struct MapView: View {
     @State private var showSearchModal = false
     @State private var mapOffset: CGFloat = 0
     @StateObject private var locationManager = LocationManager()
-    @StateObject private var tenantSearchViewModel: TenantSearchViewModel
+    @StateObject private var viewModel: ModalSearchViewModel
     @State private var showTutorial = false
 
     let tenants: [Tenant]
@@ -86,7 +86,7 @@ struct MapView: View {
     init(tenants: [Tenant], canteens: [Canteen]) {
         self.tenants = tenants
         self.canteens = canteens
-        self._tenantSearchViewModel = StateObject(wrappedValue: TenantSearchViewModel(tenants: tenants))
+        self._viewModel = StateObject(wrappedValue: ModalSearchViewModel(tenants: tenants))
     }
 
     private func zoomToLocation(_ coordinate: CLLocationCoordinate2D) {
@@ -106,16 +106,15 @@ struct MapView: View {
         zoomToLocation(coordinate)
         showDetail = true
         showSearchModal = false
-        tenantSearchViewModel.onClose()
+        viewModel.onClose()
     }
 
     private func handleTenantSelection(_ tenant: Tenant) {
         guard let canteen = tenant.canteen else { return }
         let coordinate = CLLocationCoordinate2D(latitude: canteen.latitude, longitude: canteen.longitude)
         zoomToLocation(coordinate)
-        tenantSearchViewModel.onClose()
+        viewModel.onClose()
         showSearchModal = false
-        // TO DO: Navigate to Tenant Page
     }
 
     private func annotationContent(for canteen: Canteen) -> some View {
@@ -226,7 +225,7 @@ struct MapView: View {
             set: { showSearchModal = $0 }
         ), onDismiss: {}) {
             ModalSearch(
-                tenantSearchViewModel: tenantSearchViewModel
+                viewModel: viewModel
             )
         }
         .onAppear {

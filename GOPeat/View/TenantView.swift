@@ -10,56 +10,29 @@ import SwiftUI
 
 let sampleImages = ["image1", "image2", "image3", "image4", "image5"]
 
-class FoodFilterViewModel: ObservableObject{
-    @Published var selectedCategories: [String] = []
-    @Published var filteredFoods: [Food] = []
-    
-    let foods: [Food]
-    let categories: [String] = FoodCategory.allCases.map{ $0.rawValue }
-    
-    init(foods: [Food]) {
-        var tempfoods = foods
-        let dummy = Food(name: "Dumy", description: "Dumy", categories: [.nonSpicy, .nonGreasy, .nonSweet, .spicy, .greasy, .sweet, .soup, .roast, .savory], tenant: nil)
-        tempfoods.insert(dummy, at: 0)
-        self.foods = tempfoods
-        self.filteredFoods = tempfoods
-    }
-    
-    func updateFilteredFood(selectedCategories: [String]) {
-        if selectedCategories.isEmpty {
-            filteredFoods = foods
-        } else {
-            filteredFoods = foods.filter { food in
-                Set(selectedCategories).isSubset(of: Set(food.categories.map { $0.rawValue }))
-            }
-        }
-    }
-}
-
 
 // Tenant Page
 struct TenantView: View {
     @Environment(\.dismiss) var dismiss
     let foods: [Food]
     let tenant: Tenant
-    let isHalal: Bool
     let symbol: String
     let color: Color
-    @Binding var selectedCategories: [String]
-    @StateObject private var viewModel: FoodFilterViewModel
+    @State var selectedCategories: [String]
+    @StateObject private var viewModel: TenantViewModel
     
     @State private var maxPrice: Double? = nil
     @State private var isOpenNow: Bool? = nil
 
     
-    init(tenant: Tenant, foods: [Food], selectedCategories: Binding<[String]>) {
+    init(tenant: Tenant, foods: [Food], selectedCategories: [String]) {
         self.foods = foods
         self.tenant = tenant
-        self.isHalal = tenant.isHalal ?? false
+        let isHalal = tenant.isHalal ?? false
         self.symbol = isHalal ? "checkmark.circle.fill" : "xmark.circle.fill"
         self.color = isHalal ? .green : .red
-        self._selectedCategories = selectedCategories
-        _viewModel = StateObject(wrappedValue: FoodFilterViewModel(foods: foods))
+        self.selectedCategories = selectedCategories
+        _viewModel = StateObject(wrappedValue: TenantViewModel(foods: foods))
         
         let appear = UINavigationBarAppearance()
         
@@ -144,7 +117,8 @@ struct TenantView: View {
                         Filter(categories: viewModel.categories, selectedCategories: $selectedCategories, maxPrice: $maxPrice, isOpenNow: $isOpenNow)
                             .onChange(of: selectedCategories) { _, _ in
                                 viewModel.updateFilteredFood(selectedCategories: selectedCategories)
-                            }.padding(.horizontal, 20)
+                            }
+                            .padding(.horizontal, 20)
                         
                         // List of Food
                         VStack(spacing: 10) {
