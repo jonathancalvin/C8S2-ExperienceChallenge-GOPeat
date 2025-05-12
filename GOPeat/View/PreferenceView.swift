@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PreferenceView: View {
     @State var selectedCategories: [String] = []
+    @State var shouldNavigate: Bool = false
     var body: some View {
         GeometryReader { geometry in
             ZStack {
@@ -44,15 +45,22 @@ struct PreferenceView: View {
                     Spacer()
                     Button("Continue") {
                         AppStorageManager.shared.fixCategories = selectedCategories
+                        AppStorageManager.shared.hasCompletedPreference = true
+                        shouldNavigate = true
                     }
-                        .frame(width: geometry.size.width * 0.7)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .foregroundStyle(Color("NonDefault"))
-                        .background(
-                            Capsule()
-                                .fill(Color("Primary"))
-                        )
+                    .frame(width: geometry.size.width * 0.7)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .foregroundStyle(Color("NonDefault"))
+                    .background(
+                        Capsule()
+                            .fill(Color("Primary"))
+                    )
+                    NavigationLink(
+                        destination: ContentView(),
+                        isActive: $shouldNavigate,
+                        label: { EmptyView() }
+                    )
                 }
             }
         }

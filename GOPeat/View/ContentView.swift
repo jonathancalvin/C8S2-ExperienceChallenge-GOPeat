@@ -218,20 +218,26 @@ struct ContentView: View {
         }
     }
     var body: some View {
-        Group {
-            if isDataLoaded {
-                MapView(tenants: tenants, canteens: canteens)
-            } else {
-                ProgressView("Loading data...")
+        NavigationStack {
+            Group {
+                if AppStorageManager.shared.hasCompletedPreference {
+                    MapView(tenants: tenants, canteens: canteens)
+                }
+                else if isDataLoaded {
+                    PreferenceView()
+                } else {
+                    ProgressView("Loading data...")
+                }
             }
-        }
-        .task {  
-            if canteens.isEmpty {
-                await deleteInitialData()
-                await insertInitialData()
+            .task {
+                if canteens.isEmpty {
+                    await deleteInitialData()
+                    await insertInitialData()
+                }
+                showInsertedData()
+                isDataLoaded = true
             }
-            showInsertedData()
-            isDataLoaded = true
+            .toolbar(.hidden)
         }
     }
 }

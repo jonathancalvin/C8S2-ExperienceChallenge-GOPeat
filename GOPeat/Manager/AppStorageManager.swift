@@ -15,6 +15,7 @@ final class AppStorageManager {
     
     private enum Keys {
         static let fixCategories = "fixCategories"
+        static let hasCompletedPreference = "hasCompletedPreference"
     }
     
     var fixCategories: [String]? {
@@ -30,5 +31,9 @@ final class AppStorageManager {
                 userDefaults.removeObject(forKey: Keys.fixCategories)
             }
         }
+    }
+    var hasCompletedPreference: Bool {
+        get { userDefaults.bool(forKey: Keys.hasCompletedPreference)}
+        set { userDefaults.set(newValue, forKey: Keys.hasCompletedPreference)}
     }
 }

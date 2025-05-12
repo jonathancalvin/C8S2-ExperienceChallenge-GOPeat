@@ -11,7 +11,7 @@ import SwiftData
 struct GOPeat: App {
     var body: some Scene {
         WindowGroup {
-            PreferenceView()
+            SplashScreenView()
         }
         .modelContainer(for: [Canteen.self, Tenant.self, Food.self])
     }
