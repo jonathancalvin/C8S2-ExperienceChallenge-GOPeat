@@ -30,7 +30,7 @@ struct CanteenDetail: View {
             Divider()
             if !tenants.isEmpty {
                 ForEach(tenants) {tenant in
-                    TenantCard(tenant: tenant, selectedCategories: $viewModel.selectedCategories)
+                    TenantCard(tenant: tenant, selectedCategories: $viewModel.selectedCategories, displayFoods: viewModel.getDisplayFoods(tenant: tenant, searchTerm: viewModel.searchTerm))
                 }
             } else {
                 Text("Not Found")

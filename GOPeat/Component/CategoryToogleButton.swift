@@ -15,7 +15,7 @@ struct CategoryToogleButton: View {
         Text(name)
             .font(.caption)
             .fontWeight(isSelected ? .medium : .regular)
-            .foregroundStyle(isSelected ? Color("NonDefault") : Color.primary)
+            .foregroundStyle(isSelected ? Color("NonDefault") : Color.black)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
             .background(
@@ -30,5 +30,5 @@ struct CategoryToogleButton: View {
 }
 
 #Preview {
-    CategoryToogleButton(name: "test", isSelected: true)
+    CategoryToogleButton(name: "test", isSelected: false)
 }

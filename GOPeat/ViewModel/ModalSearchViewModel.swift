@@ -27,13 +27,23 @@ final class ModalSearchViewModel: ObservableObject{
             updateFilteredTenant()
         }
     }
-    
     let tenants: [Tenant]
     let categories: [String] = ["Halal", "Non-Halal"] + FoodCategory.allCases.map{ $0.rawValue }
     
     init(tenants: [Tenant]) {
         self.tenants = tenants
         self.filteredTenants = tenants
+        self.selectedCategories = AppStorageManager.shared.fixCategories ?? []
+    }
+    func getDisplayFoods(tenant: Tenant, searchTerm: String) -> [Food] {
+        let loweredCaseString = searchTerm.lowercased()
+        let foodCategories = selectedCategories.filter{$0 != "Halal" && $0 != "Non-Halal"}
+        
+        let searchedFoods = tenant.foods.filter{ food in
+            Set(foodCategories).isSubset(of: Set(food.categories.map {$0.rawValue}))
+            && (searchTerm.isEmpty ? true : food.name.lowercased().contains(loweredCaseString))
+        }
+        return searchedFoods.isEmpty ? tenant.foods : searchedFoods
     }
     func doSearch(searchTerm: String) -> [Tenant] {
         guard !searchTerm.isEmpty else { return filteredTenants }

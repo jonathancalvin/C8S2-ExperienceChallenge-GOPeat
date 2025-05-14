@@ -15,7 +15,7 @@ class TenantViewModel: ObservableObject{
     
     init(foods: [Food]) {
         var tempfoods = foods
-        let dummy = Food(name: "Dumy", description: "Dumy", categories: [.nonSpicy, .nonGreasy, .nonSweet, .spicy, .greasy, .sweet, .soup, .roast, .savory], tenant: nil)
+        let dummy = Food(name: "Dumy", description: "Dumy", categories: [.nonSpicy, .nonGreasy, .nonSweet, .spicy, .greasy, .sweet, .soup, .roast, .savory], tenant: nil, price: 15000, image: "defaultFood")
         tempfoods.insert(dummy, at: 0)
         self.foods = tempfoods
         self.filteredFoods = tempfoods

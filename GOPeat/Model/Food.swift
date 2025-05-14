@@ -14,12 +14,16 @@ class Food: Identifiable {
     var name: String
     var desc: String
     var tenant: Tenant?
+    var price: Int
+    var image: String
     var categories: [FoodCategory] = []
-    init(name: String, description: String, categories: [FoodCategory], tenant: Tenant?) {
+    init(name: String, description: String, categories: [FoodCategory], tenant: Tenant?, price: Int, image: String) {
         self.name = name
         self.desc = description
         self.categories = categories
         self.tenant = tenant
+        self.price = price
+        self.image = image
     }
 }
 enum FoodCategory: String, CaseIterable, Codable {

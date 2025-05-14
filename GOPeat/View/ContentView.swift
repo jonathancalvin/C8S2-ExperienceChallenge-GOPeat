@@ -94,72 +94,73 @@ struct ContentView: View {
         
         // create food for each canteen
         let kasturiFoods = [
-            Food(name: "Sapi Lada Hitam", description: "Sapi dengan saus lada hitam", categories: [.spicy, .savory, .greasy], tenant: kasturi),
-            Food(name: "Sawi Putih", description: "Sawi putih rebus", categories: [.nonSpicy, .nonGreasy, .nonSweet], tenant: kasturi),
-            Food(name: "Otak-Otak", description: "Otak-otak bakar khas", categories: [.nonSpicy, .nonGreasy, .nonSweet], tenant: kasturi),
-            Food(name: "Telur Ponti", description: "Telur khas Pontianak", categories: [.savory, .spicy, .greasy], tenant: kasturi),
-            Food(name: "Ikan Tongkol", description: "Ikan tongkol dengan bumbu", categories: [.greasy, .savory], tenant: kasturi),
-            Food(name: "Kentang Mustofa", description: "Kentang goreng kering", categories: [.greasy, .sweet], tenant: kasturi),
-            Food(name: "Tempe Kering", description: "Tempe goreng kering", categories: [.greasy, .savory], tenant: kasturi),
-            Food(name: "Ayam Kering", description: "Ayam goreng kering", categories: [.greasy, .savory], tenant: kasturi),
-            Food(name: "Teri Kacang", description: "Teri goreng dengan kacang", categories: [.nonSpicy, .greasy, .sweet], tenant: kasturi),
-            Food(name: "Ayam Bakar", description: "Ayam bakar kecap", categories: [.nonSpicy, .savory, .sweet], tenant: kasturi),
-            Food(name: "Ayam Rendang", description: "Ayam dengan bumbu rendang", categories: [.nonSpicy], tenant: kasturi),
-            Food(name: "Ayam Gulai", description: "Ayam dengan kuah gulai", categories: [.nonGreasy, .nonSpicy], tenant: kasturi)
+            Food(name: "Sapi Lada Hitam", description: "Sapi dengan saus lada hitam", categories: [.spicy, .savory, .greasy], tenant: kasturi, price: 14500, image: "defaultFood"),
+            Food(name: "Sawi Putih", description: "Sawi putih rebus", categories: [.nonSpicy, .nonGreasy, .nonSweet], tenant: kasturi, price: 13500, image: "defaultFood"),
+            Food(name: "Otak-Otak", description: "Otak-otak bakar khas", categories: [.nonSpicy, .nonGreasy, .nonSweet], tenant: kasturi, price: 14000, image: "defaultFood"),
+            Food(name: "Telur Ponti", description: "Telur khas Pontianak", categories: [.savory, .spicy, .greasy], tenant: kasturi, price: 15000, image: "defaultFood"),
+            Food(name: "Ikan Tongkol", description: "Ikan tongkol dengan bumbu", categories: [.greasy, .savory], tenant: kasturi, price: 14200, image: "defaultFood"),
+            Food(name: "Kentang Mustofa", description: "Kentang goreng kering", categories: [.greasy, .sweet], tenant: kasturi, price: 13500, image: "defaultFood"),
+            Food(name: "Tempe Kering", description: "Tempe goreng kering", categories: [.greasy, .savory], tenant: kasturi, price: 13000, image: "defaultFood"),
+            Food(name: "Ayam Kering", description: "Ayam goreng kering", categories: [.greasy, .savory], tenant: kasturi, price: 14500, image: "ayamBakar"),
+            Food(name: "Teri Kacang", description: "Teri goreng dengan kacang", categories: [.nonSpicy, .greasy, .sweet], tenant: kasturi, price: 13500, image: "defaultFood"),
+            Food(name: "Ayam Bakar", description: "Ayam bakar kecap", categories: [.nonSpicy, .savory, .sweet], tenant: kasturi, price: 15000, image: "ayamGulai"),
+            Food(name: "Ayam Rendang", description: "Ayam dengan bumbu rendang", categories: [.nonSpicy], tenant: kasturi, price: 14000, image: "ayamBakar"),
+            Food(name: "Ayam Gulai", description: "Ayam dengan kuah gulai", categories: [.nonGreasy, .nonSpicy], tenant: kasturi, price: 13800, image: "ayamGulai")
         ]
         
         let laDingFoods = [
-            Food(name: "Soto Mie", description: "Soto mie khas Bogor", categories: [.soup, .nonSpicy, .savory], tenant: laDing),
-            Food(name: "Sop Iga", description: "Sup iga sapi", categories: [.soup, .nonSpicy, .savory], tenant: laDing),
-            Food(name: "Sop Daging", description: "Sup daging sapi", categories: [.soup, .nonSpicy, .savory], tenant: laDing),
-            Food(name: "Somay", description: "Siomay khas Bandung", categories: [.savory], tenant: laDing),
-            Food(name: "Nasi Uduk", description: "Nasi gurih khas Jakarta", categories: [.savory], tenant: laDing)
+            Food(name: "Soto Mie", description: "Soto mie khas Bogor", categories: [.soup, .nonSpicy, .savory], tenant: laDing, price: 23000, image: "defaultFood"),
+            Food(name: "Sop Iga", description: "Sup iga sapi", categories: [.soup, .nonSpicy, .savory], tenant: laDing, price: 25000, image: "defaultFood"),
+            Food(name: "Sop Daging", description: "Sup daging sapi", categories: [.soup, .nonSpicy, .savory], tenant: laDing, price: 24000, image: "defaultFood"),
+            Food(name: "Somay", description: "Siomay khas Bandung", categories: [.savory], tenant: laDing, price: 22000, image: "defaultFood"),
+            Food(name: "Nasi Uduk", description: "Nasi gurih khas Jakarta", categories: [.savory], tenant: laDing, price: 20000, image: "defaultFood")
         ]
         
-        let mamaDjempolFoods = [
-            Food(name: "Ayam Lada Hitam", description: "Ayam dengan saus lada hitam", categories: [.nonGreasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ayam Jamur Kancing", description: "Ayam dengan jamur kancing", categories: [.nonGreasy, .nonSpicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ayam Saus Madu", description: "Ayam dengan saus madu", categories: [.greasy, .nonSpicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ayam Pedas Manis", description: "Ayam dengan bumbu pedas manis", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ayam Saus Padang", description: "Ayam dengan saus Padang", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ayam Sambal Hijau", description: "Ayam dengan sambal hijau", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ayam Suwir", description: "Ayam suwir pedas", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ikan Dori", description: "Ikan dori goreng", categories: [.greasy, .nonSpicy, .savory], tenant: mamaDjempol),
-            Food(name: "Cumi Rica", description: "Cumi dengan bumbu rica", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Ikan Tongkol Balado", description: "Ikan tongkol dengan balado", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Tempe Orek", description: "Tempe goreng kecap", categories: [.greasy, .nonSpicy, .savory], tenant: mamaDjempol),
-            Food(name: "Kangkung", description: "Tumis kangkung", categories: [.nonGreasy, .spicy, .savory], tenant: mamaDjempol),
-            Food(name: "Sayur Toge", description: "Tumis toge", categories: [.nonGreasy, .nonSpicy], tenant: mamaDjempol)
-            ]
-            
-            let dapurMiminFoods = [
-                Food(name: "Tempe", description: "Tempe.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant),
-                Food(name: "Telor Kecap", description: "Telur, kecap.", categories: [.nonSpicy, .sweet, .savory], tenant: dapurMiminTenant),
-                Food(name: "Jamur Cabe Garam", description: "Jamur, cabe, garam.", categories: [.spicy, .savory], tenant: dapurMiminTenant),
-                Food(name: "Ikan Bandeng Presto", description: "Ikan bandeng presto.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant),
-                Food(name: "Perkedel Jagung", description: "Jagung, goreng.", categories: [.nonSpicy, .sweet, .savory], tenant: dapurMiminTenant),
-                Food(name: "Tahu Telur Nasi", description: "Tahu, telur, nasi, saus kacang.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant),
-                Food(name: "Gado Polos", description: "Sayuran, bumbu kacang.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant),
-                Food(name: "Gado Gado + Telur", description: "Sayuran, bumbu kacang, telur.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant),
-                Food(name: "Mieprak", description: "Mie instan.", categories: [.savory], tenant: dapurMiminTenant),
-                Food(name: "Nasi Kebuli", description: "Nasi, rempah, kaldu.", categories: [.savory], tenant: dapurMiminTenant),
-                Food(name: "Nasi Briyani", description: "Nasi, rempah, daging.", categories: [.savory], tenant: dapurMiminTenant),
-                Food(name: "Siomay (3 pcs)", description: "Ikan, tepung, bumbu kacang.", categories: [.savory], tenant: dapurMiminTenant),
-                Food(name: "Soto Ayam", description: "Ayam, kuah soto, rempah.", categories: [.nonSpicy, .savory, .soup], tenant: dapurMiminTenant),
-                Food(name: "Tahu Sechyan", description: "Tahu, bumbu Szechuan.", categories: [.spicy, .savory], tenant: dapurMiminTenant)
+            let mamaDjempolFoods = [
+                Food(name: "Ayam Lada Hitam", description: "Ayam dengan saus lada hitam", categories: [.nonGreasy, .spicy, .savory], tenant: mamaDjempol, price: 19000, image: "ayamBakar"),
+                Food(name: "Ayam Jamur Kancing", description: "Ayam dengan jamur kancing", categories: [.nonGreasy, .nonSpicy, .savory], tenant: mamaDjempol, price: 18000, image: "ayamGulai"),
+                Food(name: "Ayam Saus Madu", description: "Ayam dengan saus madu", categories: [.greasy, .nonSpicy, .savory], tenant: mamaDjempol, price: 20000, image: "ayamBakar"),
+                Food(name: "Ayam Pedas Manis", description: "Ayam dengan bumbu pedas manis", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol, price: 19000, image: "ayamGulai"),
+                Food(name: "Ayam Saus Padang", description: "Ayam dengan saus Padang", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol, price: 20000, image: "ayamBakar"),
+                Food(name: "Ayam Sambal Hijau", description: "Ayam dengan sambal hijau", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol, price: 19000, image: "ayamGulai"),
+                Food(name: "Ayam Suwir", description: "Ayam suwir pedas", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol, price: 18000, image: "ayamBakar"),
+                Food(name: "Ikan Dori", description: "Ikan dori goreng", categories: [.greasy, .nonSpicy, .savory], tenant: mamaDjempol, price: 20000, image: "defaultFood"),
+                Food(name: "Cumi Rica", description: "Cumi dengan bumbu rica", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol, price: 20000, image: "defaultFood"),
+                Food(name: "Ikan Tongkol Balado", description: "Ikan tongkol dengan balado", categories: [.greasy, .spicy, .savory], tenant: mamaDjempol, price: 19000, image: "defaultFood"),
+                Food(name: "Tempe Orek", description: "Tempe goreng kecap", categories: [.greasy, .nonSpicy, .savory], tenant: mamaDjempol, price: 17000, image: "defaultFood"),
+                Food(name: "Kangkung", description: "Tumis kangkung", categories: [.nonGreasy, .spicy, .savory], tenant: mamaDjempol, price: 16000, image: "defaultFood"),
+                Food(name: "Sayur Toge", description: "Tumis toge", categories: [.nonGreasy, .nonSpicy], tenant: mamaDjempol, price: 16000, image: "defaultFood")
             ]
 
+            let dapurMiminFoods = [
+                Food(name: "Tempe", description: "Tempe.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant, price: 26000, image: "defaultFood"),
+                Food(name: "Telor Kecap", description: "Telur, kecap.", categories: [.nonSpicy, .sweet, .savory], tenant: dapurMiminTenant, price: 27000, image: "defaultFood"),
+                Food(name: "Jamur Cabe Garam", description: "Jamur, cabe, garam.", categories: [.spicy, .savory], tenant: dapurMiminTenant, price: 29000, image: "defaultFood"),
+                Food(name: "Ikan Bandeng Presto", description: "Ikan bandeng presto.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant, price: 30000, image: "defaultFood"),
+                Food(name: "Perkedel Jagung", description: "Jagung, goreng.", categories: [.nonSpicy, .sweet, .savory], tenant: dapurMiminTenant, price: 28000, image: "defaultFood"),
+                Food(name: "Tahu Telur Nasi", description: "Tahu, telur, nasi, saus kacang.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant, price: 27000, image: "defaultFood"),
+                Food(name: "Gado Polos", description: "Sayuran, bumbu kacang.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant, price: 26000, image: "defaultFood"),
+                Food(name: "Gado Gado + Telur", description: "Sayuran, bumbu kacang, telur.", categories: [.nonSpicy, .savory], tenant: dapurMiminTenant, price: 28000, image: "defaultFood"),
+                Food(name: "Mieprak", description: "Mie instan.", categories: [.savory], tenant: dapurMiminTenant, price: 29000, image: "defaultFood"),
+                Food(name: "Nasi Kebuli", description: "Nasi, rempah, kaldu.", categories: [.savory], tenant: dapurMiminTenant, price: 30000, image: "defaultFood"),
+                Food(name: "Nasi Briyani", description: "Nasi, rempah, daging.", categories: [.savory], tenant: dapurMiminTenant, price: 30000, image: "defaultFood"),
+                Food(name: "Siomay (3 pcs)", description: "Ikan, tepung, bumbu kacang.", categories: [.savory], tenant: dapurMiminTenant, price: 27000, image: "defaultFood"),
+                Food(name: "Soto Ayam", description: "Ayam, kuah soto, rempah.", categories: [.nonSpicy, .savory, .soup], tenant: dapurMiminTenant, price: 29000, image: "ayamGulai"),
+                Food(name: "Tahu Sechyan", description: "Tahu, bumbu Szechuan.", categories: [.spicy, .savory], tenant: dapurMiminTenant, price: 26000, image: "defaultFood")
+            ]
+
+
             let nasiPadangFoods = [
-                Food(name: "Nasi Padang", description: "Nasi dengan berbagai pilihan lauk khas Padang.", categories: [.savory], tenant: nasiPadangTenant),
-                Food(name: "Rendang Daging", description: "Daging sapi yang dimasak dalam bumbu rendang yang kaya rempah.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Ayam Gulai", description: "Ayam yang dimasak dalam kuah gulai kuning yang gurih.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Ayam Bakar", description: "Ayam yang dibakar dengan bumbu khas.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Ikan Bakar", description: "Ikan yang dibakar dengan bumbu khas.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Telur Dadar", description: "Telur dadar khas Padang yang tebal dan renyah.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Sayur Nangka", description: "Gulai nangka muda.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Daun Singkong", description: "Daun singkong rebus yang dibumbui.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Sambal Ijo", description: "Sambal cabai hijau khas Padang.", categories: [.spicy, .savory], tenant: nasiPadangTenant),
-                Food(name: "Kerupuk Kulit", description: "Kerupuk kulit sapi goreng.", categories: [.nonSpicy, .savory, .greasy], tenant: nasiPadangTenant)
+                Food(name: "Nasi Padang", description: "Nasi dengan berbagai pilihan lauk khas Padang.", categories: [.savory], tenant: nasiPadangTenant, price: 45000, image: "defaultFood"),
+                Food(name: "Rendang Daging", description: "Daging sapi yang dimasak dalam bumbu rendang yang kaya rempah.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant, price: 48000, image: "defaultFood"),
+                Food(name: "Ayam Gulai", description: "Ayam yang dimasak dalam kuah gulai kuning yang gurih.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant, price: 46000, image: "ayamGulai"),
+                Food(name: "Ayam Bakar", description: "Ayam yang dibakar dengan bumbu khas.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant, price: 47000, image: "ayamBakar"),
+                Food(name: "Ikan Bakar", description: "Ikan yang dibakar dengan bumbu khas.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant, price: 49000, image: "defaultFood"),
+                Food(name: "Telur Dadar", description: "Telur dadar khas Padang yang tebal dan renyah.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant, price: 42000, image: "defaultFood"),
+                Food(name: "Sayur Nangka", description: "Gulai nangka muda.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant, price: 40000, image: "defaultFood"),
+                Food(name: "Daun Singkong", description: "Daun singkong rebus yang dibumbui.", categories: [.nonSpicy, .savory], tenant: nasiPadangTenant, price: 40000, image: "defaultFood"),
+                Food(name: "Sambal Ijo", description: "Sambal cabai hijau khas Padang.", categories: [.spicy, .savory], tenant: nasiPadangTenant, price: 42000, image: "defaultFood"),
+                Food(name: "Kerupuk Kulit", description: "Kerupuk kulit sapi goreng.", categories: [.nonSpicy, .savory, .greasy], tenant: nasiPadangTenant, price: 43000, image: "defaultFood")
             ]
             //TO DO - create food for other tenant
 

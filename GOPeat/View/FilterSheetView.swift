@@ -27,6 +27,7 @@ struct FilterSheetView: View {
     }
     var body: some View {
         ZStack {
+            Color.white
             ScrollView(.vertical) {
                 VStack(alignment: .leading) {
                     Text("Filter Restaurant")
@@ -58,48 +59,23 @@ struct FilterSheetView: View {
                     .clipShape(Capsule())
                 }
             }
+            .padding()
             VStack {
                 Spacer()
                 
-                HStack {
-                    Button {
-                        onClear()
-                    } label: {
-                        Text("Clear Filter")
-                            .foregroundStyle((tempMaxPrice != 100000 || tempIsOpenNow) ? Color.primary : Color.gray)
-                            .padding(10)
-                            .frame(maxWidth: .infinity)
-                            .background(
-                                (tempMaxPrice != 100000 || tempIsOpenNow) ? Color(.systemGray5) : Color.clear
-                            )
-                            .clipShape(Capsule())
-                            .overlay(
-                                Capsule()
-                                    .stroke(Color(.systemGray5), lineWidth: 1)
-                            )
-                    }
-                    .disabled(tempMaxPrice == 100000 && !tempIsOpenNow)
-                    
-                    Button {
-                        onApply()
-                    } label: {
-                        Text("Apply")
-                            .foregroundStyle(Color("NonDefault"))
-                            .padding(10)
-                            .frame(maxWidth: .infinity)
-                            .background(Color.blue)
-                            .clipShape(Capsule())
-                    }
-                }
-                .frame(maxWidth: .infinity)
+                FilterActionBar(onClear: {
+                    onClear()
+                }, onApply: {
+                    onApply()
+                }, isDisabled:
+                    (tempMaxPrice == 100000 && !tempIsOpenNow)
+                )
             }
-            .frame(maxWidth: .infinity)
         }
         .onAppear {
             tempMaxPrice = maxPrice
             tempIsOpenNow = isOpenNow
         }
-        .padding()
         .presentationDragIndicator(.visible)
     }
 }

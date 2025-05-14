@@ -36,4 +36,6 @@ final class AppStorageManager {
         get { userDefaults.bool(forKey: Keys.hasCompletedPreference)}
         set { userDefaults.set(newValue, forKey: Keys.hasCompletedPreference)}
     }
+    let foodCategories:[String] = CategoryType.food.categories
+    let tenantCategories: [String] = CategoryType.tenant.categories
 }
