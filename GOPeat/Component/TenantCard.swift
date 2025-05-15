@@ -102,7 +102,6 @@ struct TenantCard: View {
         } content: {
             TenantView(tenant: tenant, foods: tenant.foods, selectedCategories: selectedCategories)
         }
-
     }
 }
 
