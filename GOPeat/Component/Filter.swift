@@ -69,7 +69,7 @@ struct Filter: View {
                     Image(systemName: "x.circle")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 20)
+                        .frame(width: 24)
                         .foregroundStyle(Color(.red))
                 }
             }
@@ -82,7 +82,7 @@ struct Filter: View {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: 20)
+                        .frame(width: 24)
                         .foregroundStyle(Color("Default"))
                         .opacity(isAdditionalFilterUsed ? 1 : 0.3)
                 }
@@ -101,10 +101,7 @@ struct Filter: View {
             }
             ScrollViewReader { scrollProxy in
                 ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 0) {
-                        Color.clear
-                            .frame(width: 0)
-                            .id("scrollStart")
+                    HStack(spacing: 10) {
                         FilterButton(name: "Food", isSelected: !foodCategories.isEmpty, action: {
                             showFoodFilter = true
                         })
@@ -119,35 +116,10 @@ struct Filter: View {
                         })
                         .sheet(isPresented: $showTenantFilter) {
                             TenantFilterView(selectedCategories: $selectedCategories, present: $showTenantFilter)
-                                .presentationDetents([.fraction(0.2)])
+                                .presentationDetents([.fraction(0.25)])
                                 .presentationDragIndicator(.visible)
                         }
-
-                        HStack(spacing: 10) {
-                            ForEach(categories.sorted { lhs, rhs in
-                                let lhsSelected = selectedCategories.contains(lhs)
-                                let rhsSelected = selectedCategories.contains(rhs)
-                                return lhsSelected && !rhsSelected
-                            }, id: \.self) { category in
-                                Button {
-                                    if !selectedCategories.contains(category) {
-                                        if let conflictCategory = conflictingCategory(for: category) {
-                                            selectedCategories.removeAll { $0 == conflictCategory }
-                                        }
-                                        selectedCategories.append(category)
-                                    } else {
-                                        selectedCategories.removeAll { $0 == category }
-                                    }
-                                } label: {
-                                    Text(category)
-                                        .font(.caption)
-                                }
-                                .foregroundStyle(selectedCategories.contains(category) ? Color("NonDefault")  :  Color.primary)
-                                .padding(10)
-                                .background(selectedCategories.contains(category) ? Color.blue : Color(.systemGray5))
-                                .clipShape(Capsule())
-                            }
-                        }
+                        
                     }
                 }
                 .onChange(of: selectedCategories, initial: selectedCategories.isEmpty) { _, _ in

@@ -39,7 +39,7 @@ enum FoodCategory: String, CaseIterable, Codable {
 }
 
 extension Food {
-    static var allCategories: [String] {
+    static var availableFixedCategory: [String] {
         ["Halal", "Non-Halal"] + FoodCategory.allCases.map { $0.rawValue }
     }
 }

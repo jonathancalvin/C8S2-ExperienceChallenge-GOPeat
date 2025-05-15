@@ -30,9 +30,13 @@ struct FoodFilterView: View {
         present = false
     }
     var body: some View {
-        VStack(spacing: 10) {
-            CategoryFilter(categories: AppStorageManager.shared.foodCategories, selectedCategories: $tempSelectedCategories)
-                .padding()
+        VStack(alignment: .leading,spacing: 10) {
+            Spacer()
+            CategoryFilter(categories: AppStorageManager.shared.foodCategories, selectedCategories: $tempSelectedCategories,
+               title: "Cuisine Type",
+                           column: 5
+            )
+            .padding()
             FilterActionBar(onClear: {
                 onClear()
             }, onApply: {

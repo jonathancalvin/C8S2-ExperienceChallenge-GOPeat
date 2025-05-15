@@ -107,7 +107,7 @@ struct TenantCard: View {
 }
 
 #Preview {
-    @Previewable @State var selectedCategories = Food.allCategories
+    @Previewable @State var selectedCategories = AppStorageManager.shared.allCategories
     @Previewable var tenant: Tenant = Tenant(name: "Mama Djempol",
                                              image: "MamaDjempolGE",
                                              contactPerson: "08123456789",

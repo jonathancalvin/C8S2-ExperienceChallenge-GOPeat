@@ -30,9 +30,13 @@ struct TenantFilterView: View {
         present = false
     }
     var body: some View {
-        VStack(spacing: 10) {
-            CategoryFilter(categories: AppStorageManager.shared.tenantCategories, selectedCategories: $tempSelectedCategories)
-                .padding()
+        VStack(alignment: .leading, spacing: 10) {
+            Spacer()
+            CategoryFilter(categories: AppStorageManager.shared.tenantCategories, selectedCategories: $tempSelectedCategories,
+                title: "Tenant",
+                           column: 3
+            )
+            .padding()
             FilterActionBar(onClear: {
                 onClear()
             }, onApply: {

@@ -17,6 +17,7 @@ struct FilterButton: View {
         } label: {
             HStack(spacing: 5){
                 Text(name)
+                    .font(.subheadline)
                     .padding(.leading, 5)
                 Image(systemName: "chevron.down")
             }

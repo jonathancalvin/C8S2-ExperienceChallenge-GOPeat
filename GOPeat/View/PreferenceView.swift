@@ -32,7 +32,10 @@ struct PreferenceView: View {
                                 .fontWeight(.semibold)
                         }
                         Text("Choose what suits your diet and lifestyle — from halal to non-spicy or anything in between.")
-                        CategoryFilter(categories: Food.allCategories, selectedCategories: $selectedCategories)
+                        CategoryFilter(categories: Food.availableFixedCategory, selectedCategories: $selectedCategories,
+                                       title: "",
+                                       column: 4
+                        )
                     }
                         .frame(width: geometry.size.width * 0.7)
                         .padding(.horizontal, 20)

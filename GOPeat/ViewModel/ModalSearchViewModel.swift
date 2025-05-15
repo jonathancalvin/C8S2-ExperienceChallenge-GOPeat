@@ -28,7 +28,12 @@ final class ModalSearchViewModel: ObservableObject{
         }
     }
     let tenants: [Tenant]
-    let categories: [String] = ["Halal", "Non-Halal"] + FoodCategory.allCases.map{ $0.rawValue }
+    let categories: [String] = AppStorageManager.shared.allCategories
+    var selectedFoodCategories: [String] {
+        get {
+            return selectedCategories.filtered(by: AppStorageManager.shared.foodCategories)
+        }
+    }
     
     init(tenants: [Tenant]) {
         self.tenants = tenants
@@ -37,10 +42,9 @@ final class ModalSearchViewModel: ObservableObject{
     }
     func getDisplayFoods(tenant: Tenant, searchTerm: String) -> [Food] {
         let loweredCaseString = searchTerm.lowercased()
-        let foodCategories = selectedCategories.filter{$0 != "Halal" && $0 != "Non-Halal"}
         
         let searchedFoods = tenant.foods.filter{ food in
-            Set(foodCategories).isSubset(of: Set(food.categories.map {$0.rawValue}))
+            Set(selectedFoodCategories).isSubset(of: Set(food.categories.map {$0.rawValue}))
             && (searchTerm.isEmpty ? true : food.name.lowercased().contains(loweredCaseString))
         }
         return searchedFoods.isEmpty ? tenant.foods : searchedFoods
@@ -48,13 +52,12 @@ final class ModalSearchViewModel: ObservableObject{
     func doSearch(searchTerm: String) -> [Tenant] {
         guard !searchTerm.isEmpty else { return filteredTenants }
         let loweredCaseString = searchTerm.lowercased()
-        let foodCategories = selectedCategories.filter{$0 != "Halal" && $0 != "Non-Halal"}
         return filteredTenants.filter { tenant in
             //Search by tenant name
             tenant.name.lowercased().contains(loweredCaseString) ||
             //Search by food name while considering filters
             tenant.foods.filter{food in
-                Set(foodCategories).isSubset(of: Set(food.categories.map {$0.rawValue}))
+                Set(selectedFoodCategories).isSubset(of: Set(food.categories.map {$0.rawValue}))
             }.contains { food in
                 food.name.lowercased().contains(loweredCaseString)
             }
@@ -78,22 +81,16 @@ final class ModalSearchViewModel: ObservableObject{
         
         var halalTenants = tenants
         
-        if containsHalal {
-            halalTenants = halalTenants.filter{$0.isHalal == true}
+        if containsHalal || containsNonHalal {
+            halalTenants = halalTenants.filter { $0.isHalal == containsHalal }
         }
-        if containsNonHalal{
-            halalTenants = halalTenants.filter{$0.isHalal == false}
-        }
-        
-        let foodCategories = selectedCategories.filter{$0 != "Halal" && $0 != "Non-Halal"}
-        
         filteredTenants = halalTenants.filter { tenant in
             let withinPriceRange = tenant.priceRange.split(separator: "-").compactMap { Double($0.replacingOccurrences(of: ".", with: "")) }
             let minPriceInRange = withinPriceRange.min() ?? 0
             let isPriceValid = minPriceInRange <= maxPrice ?? 100000
             let isOpen = !(isOpenNow ?? false) || isCurrentlyOpen(tenant.operationalHours)
-            return isPriceValid && isOpen && (foodCategories.isEmpty || tenant.foods.contains { food in
-                Set(foodCategories).isSubset(of: Set(food.categories.map { $0.rawValue }))
+            return isPriceValid && isOpen && (selectedFoodCategories.isEmpty || tenant.foods.contains { food in
+                Set(selectedFoodCategories).isSubset(of: Set(food.categories.map { $0.rawValue }))
             })
         }
     }

@@ -38,4 +38,5 @@ final class AppStorageManager {
     }
     let foodCategories:[String] = CategoryType.food.categories
     let tenantCategories: [String] = CategoryType.tenant.categories
+    let allCategories: [String] = CategoryType.food.categories + CategoryType.tenant.categories
 }

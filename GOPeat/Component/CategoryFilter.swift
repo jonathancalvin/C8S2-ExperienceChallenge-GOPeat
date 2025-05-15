@@ -1,5 +1,5 @@
 //
-//  Filter.swift
+//  CategoryFilter.swift
 //  GOPeat
 //
 //  Created by jonathan calvin sutrisna on 29/03/25.
@@ -9,9 +9,6 @@ import SwiftUI
 
 struct CategoryFilter: View {
     let categories: [String]
-    let columns: [GridItem] = [
-        GridItem(.adaptive(minimum: 85))
-    ]
     @Binding var selectedCategories: [String]
     // Function to return conflicting category
     private func conflictingCategory(for category: String) -> String? {
@@ -25,22 +22,41 @@ struct CategoryFilter: View {
             return selectedCategories.contains(conflictCategory) ? conflictCategory : nil
         }
     }
-
+    let title: String
+    var totalItem: Int{
+        get {
+            return categories.count
+        }
+    }
+    let column: Int
     var body: some View {
         VStack(alignment: .leading) {
-            LazyVGrid(columns: columns, alignment: .leading, spacing: 10) {
-                ForEach(categories, id: \.self) { category in
-                    Button {
-                        if !selectedCategories.contains(category) {
-                            if let conflictCategory = conflictingCategory(for: category) {
-                                selectedCategories.removeAll { $0 == conflictCategory }
+            Text(title)
+                .font(.title)
+                .fontWeight(.bold)
+            VStack(alignment: .leading, spacing: 10) {
+                ForEach(0..<((totalItem + column - 1) / column), id: \.self) { i in
+                    HStack(spacing: 10) {
+                        ForEach(0..<column, id: \.self) { j in
+                            let index = i * column + j
+                            if index < categories.count {
+                                let category = categories[index]
+                                Button {
+                                    if !selectedCategories.contains(category) {
+                                        if let conflictCategory = conflictingCategory(for: category) {
+                                            selectedCategories.removeAll { $0 == conflictCategory }
+                                        }
+                                        selectedCategories.append(category)
+                                    } else {
+                                        selectedCategories.removeAll { $0 == category }
+                                    }
+                                } label: {
+                                    CategoryToogleButton(name: category, isSelected: selectedCategories.contains(category))
+                                }
+                            } else {
+                                Spacer()
                             }
-                            selectedCategories.append(category)
-                        } else {
-                            selectedCategories.removeAll { $0 == category }
                         }
-                    } label: {
-                        CategoryToogleButton(name: category, isSelected: selectedCategories.contains(category))
                     }
                 }
             }
@@ -50,5 +66,6 @@ struct CategoryFilter: View {
 
 #Preview {
     @Previewable @State var selectedCategories: [String] = []
-    CategoryFilter(categories: Food.allCategories, selectedCategories: $selectedCategories)
+    var title: String = "Cuisine Type"
+    CategoryFilter(categories: AppStorageManager.shared.foodCategories, selectedCategories: $selectedCategories, title: title, column: 4)
 }

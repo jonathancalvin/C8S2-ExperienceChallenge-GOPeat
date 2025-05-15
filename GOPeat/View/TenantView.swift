@@ -142,7 +142,7 @@ struct TenantView: View {
                 .scrollIndicators(.hidden)
             }
             .onAppear(){
-                selectedCategories = selectedCategories.filter {$0 != "Halal" &&  $0 != "Non-Halal"}
+                selectedCategories = selectedCategories.filtered(by: AppStorageManager.shared.foodCategories)
                 viewModel.updateFilteredFood(selectedCategories: selectedCategories)
             }
             .ignoresSafeArea(edges: .bottom)
