@@ -21,10 +21,18 @@ struct TenantCard: View {
     }
     private func tenantDetail(activeDollarSign: Int) -> some View {
         VStack(alignment: .leading) {
-            Text(tenant.name)
-                .font(.headline)
-                .bold()
-                .padding(.bottom,5)
+            HStack(alignment: .center,spacing: 0){
+                Text(tenant.name)
+                    .font(.headline)
+                    .bold()
+                    .padding(.bottom,5)
+                Image("Halal")
+                    .resizable()
+                    .frame(maxWidth: 35, maxHeight: 35)
+                Image("Preorder")
+                    .resizable()
+                    .frame(maxWidth: 25, maxHeight: 25)
+            }
             HStack(spacing: 2) {
                 ForEach(0..<4){ index in
                     Image(systemName: "dollarsign")
@@ -51,14 +59,6 @@ struct TenantCard: View {
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     tenantDetail(activeDollarSign: activeDollarSign)
                     Spacer()
-                    VStack() {
-                        Image("Halal")
-                            .resizable()
-                            .frame(maxWidth: 40, maxHeight: 40)
-                        Image("Preorder")
-                            .resizable()
-                            .frame(maxWidth: 30, maxHeight: 30)
-                    }
                 }
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {

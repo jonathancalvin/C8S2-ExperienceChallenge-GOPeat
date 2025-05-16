@@ -12,8 +12,6 @@ final class ModalSearchViewModel: ObservableObject{
     @Published var sheeHeight: PresentationDetent = .fraction(0.1)
     @Published var filteredTenants: [Tenant] = []
     @Published var recentSearch: [String] = []
-    @Published var maxPrice: Double? = 100000
-    @Published var isOpenNow: Bool? = false
     private var cancellables = Set<AnyCancellable>()
     private let filterVM: FilterViewModel
     let tenants: [Tenant]
@@ -29,10 +27,10 @@ final class ModalSearchViewModel: ObservableObject{
         addSubscribers()
     }
     private func addSubscribers() {
-        Publishers.CombineLatest3(filterVM.$selectedCategories, filterVM.$sortBy, $isOpenNow)
+        Publishers.CombineLatest(filterVM.$selectedCategories, filterVM.$sortBy)
             .dropFirst()
             .debounce(for: .nanoseconds(1), scheduler: RunLoop.main)
-            .sink { [weak self] _, _, _ in
+            .sink { [weak self] _, _ in
                 guard let self = self else {return}
                 self.updateFilteredTenant()
             }
@@ -87,11 +85,8 @@ final class ModalSearchViewModel: ObservableObject{
             halalTenants = halalTenants.filter { $0.isHalal == containsHalal }
         }
         filteredTenants = halalTenants.filter { tenant in
-            let withinPriceRange = tenant.priceRange.split(separator: "-").compactMap { Double($0.replacingOccurrences(of: ".", with: "")) }
-            let minPriceInRange = withinPriceRange.min() ?? 0
-            let isPriceValid = minPriceInRange <= maxPrice ?? 100000
-            let isOpen = !(isOpenNow ?? false) || isCurrentlyOpen(tenant.operationalHours)
-            return isPriceValid && isOpen && (selectedFoodCategories.isEmpty || tenant.foods.contains { food in
+            let isOpen = !(filterVM.selectedTenantCategories.contains {$0 == "Open Now"}) || isCurrentlyOpen(tenant.operationalHours)
+            return /*isPriceValid && */isOpen && (selectedFoodCategories.isEmpty || tenant.foods.contains { food in
                 Set(selectedFoodCategories).isSubset(of: Set(food.categories.map { $0.rawValue }))
             })
         }
@@ -112,7 +107,5 @@ final class ModalSearchViewModel: ObservableObject{
         searchTerm = ""
         filterVM.selectedCategories = AppStorageManager.shared.fixCategories ?? []
         filteredTenants = tenants
-        isOpenNow = false
-        maxPrice = 100000
     }
 }

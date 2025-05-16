@@ -63,7 +63,7 @@ struct ModalSearch: View {
                         viewModel.saveRecentSearch(searchTerm: viewModel.searchTerm)
                       })
             if (viewModel.sheeHeight != .fraction(0.1)){
-                Filter(categories: viewModel.categories, selectedCategories: $filterVM.selectedCategories, maxPrice: $viewModel.maxPrice, isOpenNow: $viewModel.isOpenNow)
+                Filter(categories: viewModel.categories, selectedCategories: $filterVM.selectedCategories)
                 ScrollView(.vertical){
                     //Recent search (max 5)
                     if !viewModel.recentSearch.isEmpty {

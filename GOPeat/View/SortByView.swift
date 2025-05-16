@@ -17,14 +17,6 @@ struct SortByView: View {
         self._present = present
         self._selectedOptionRaw = State(initialValue: sortBy.wrappedValue.rawValue)
     }
-    private var selectedOptionBinding: Binding<String> {
-        Binding<String>(
-            get: { sortBy.rawValue },
-            set: { newValue in
-                sortBy = SortOption(rawValue: newValue) ?? .none
-            }
-        )
-    }
     private var selectedOption: SortOption {
         return SortOption(rawValue: selectedOptionRaw) ?? .none
     }

@@ -9,54 +9,51 @@ import SwiftUI
 
 struct FilterSheetView: View {
     @Environment(\.dismiss) private var dismiss
-    @Binding var maxPrice: Double
-    @Binding var isOpenNow: Bool
     
-    @State var tempMaxPrice: Double = 100000
-    @State var tempIsOpenNow: Bool = false
-    
+    @State var tempSelectedCategories: [String]
+    @State var selectedOptionRaw: String
+
+    @EnvironmentObject var filterVM: FilterViewModel
+    private var selectedOption: SortOption {
+        return SortOption(rawValue: selectedOptionRaw) ?? .none
+    }
+    private var isDisabled: Bool {
+        return (tempSelectedCategories.isEmpty && (selectedOption == .none))
+    }
     private func onApply(){
-        maxPrice = tempMaxPrice
-        isOpenNow = tempIsOpenNow
+        filterVM.selectedCategories = tempSelectedCategories
+        filterVM.sortBy = selectedOption
         dismiss()
     }
     private func onClear(){
-        maxPrice = 100000
-        isOpenNow = false
+        filterVM.selectedCategories = []
+        filterVM.sortBy = .none
         dismiss()
     }
     var body: some View {
         ZStack {
             Color.white
             ScrollView(.vertical) {
-                VStack(alignment: .leading) {
+                VStack(alignment: .leading, spacing: 20) {
                     Text("Filter Restaurant")
-                        .font(.headline)
+                        .font(.largeTitle)
                         .fontWeight(.bold)
                         .padding(.vertical, 20)
-
-                    Text("Price Range")
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-
-                    Text("Max Price: Rp.\(tempMaxPrice, specifier: "%.0f")")
-                        .font(.caption)
-                    Slider(value: $tempMaxPrice, in: 0...100000, step: 1000)
                     
-                    Text("Availability Status")
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .padding(.top, 10)
-                    Button {
-                        tempIsOpenNow.toggle()
-                    } label: {
-                        Text("Open Now")
-                            .font(.caption)
-                    }
-                    .foregroundStyle(tempIsOpenNow ? Color("NonDefault") : Color("Default"))
-                    .padding(10)
-                    .background(tempIsOpenNow ? Color.blue : Color(.systemGray5))
-                    .clipShape(Capsule())
+                    CategoryFilter(categories: AppStorageManager.shared.foodCategories, selectedCategories: $tempSelectedCategories,
+                       title: "Cuisine Type",
+                                   column: 5
+                    )
+                    CategoryFilter(categories: AppStorageManager.shared.tenantCategories, selectedCategories: $tempSelectedCategories,
+                        title: "Tenant",
+                                   column: 3
+                    )
+                    
+                    RadioButtonGroup(
+                        options: AppStorageManager.shared.allSortByOptions,
+                        title: "Sort By",
+                        selectedOption: $selectedOptionRaw
+                    )
                 }
             }
             .padding()
@@ -68,19 +65,20 @@ struct FilterSheetView: View {
                 }, onApply: {
                     onApply()
                 }, isDisabled:
-                    (tempMaxPrice == 100000 && !tempIsOpenNow)
+                    isDisabled
                 )
             }
-        }
-        .onAppear {
-            tempMaxPrice = maxPrice
-            tempIsOpenNow = isOpenNow
         }
         .presentationDragIndicator(.visible)
     }
 }
 
 
-//#Preview {
-//    FilterSheetView()
-//}
+#Preview {
+    @Previewable var filterVM: FilterViewModel = FilterViewModel()
+    FilterSheetView(
+        tempSelectedCategories: filterVM.selectedCategories,
+        selectedOptionRaw: filterVM.sortBy.rawValue
+    )
+    .environmentObject(filterVM)
+}

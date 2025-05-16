@@ -10,15 +10,15 @@ import SwiftUI
 struct Filter: View {
     let categories: [String]
     @Binding var selectedCategories: [String]
-    @Binding var maxPrice: Double?
-    @Binding var isOpenNow: Bool?
     
     @State var showPriceFilter: Bool = false
     @State var showFoodFilter: Bool = false
     @State var showTenantFilter: Bool = false
     @State var showSortByFilter: Bool = false
 
-    @State var isAdditionalFilterUsed: Bool = false
+    var isFilterUsed: Bool {
+        return !(selectedCategories.isEmpty && (filterVM.sortBy == .none))
+    }
     
     @EnvironmentObject var filterVM: FilterViewModel
     
@@ -41,30 +41,12 @@ struct Filter: View {
             return selectedCategories.contains(conflictCategory) ? conflictCategory : nil
         }
     }
-    
-    private func updateIsAdditionalFilterUsed(maxPrice: Double?, isOpenNow: Bool?) {
-        var isMapPriceChanged = false
-        var isOpenNowChanged = false
-        if let _ = maxPrice {
-            isMapPriceChanged = maxPrice != 100000
-        }
-        if let _ = isOpenNow {
-            isOpenNowChanged = isOpenNow == true
-        }
-        isAdditionalFilterUsed = isMapPriceChanged || isOpenNowChanged
-    }
-
     var body: some View {
         HStack {
             // Reset All Category Button
-            if isAdditionalFilterUsed || !selectedCategories.isEmpty {
+            if isFilterUsed {
                 Button {
-                    if let _ = maxPrice {
-                        maxPrice = 100000
-                    }
-                    if let _ = isOpenNow {
-                        isOpenNow = false
-                    }
+                    filterVM.sortBy = .none
                     selectedCategories = []
                 } label: {
                     Image(systemName: "x.circle")
@@ -75,30 +57,22 @@ struct Filter: View {
                 }
             }
             //More Filter Button
-            if let _ = maxPrice,
-               let _ = isOpenNow {
-                Button {
-                    showPriceFilter = true
-                } label: {
-                    Image(systemName: "line.3.horizontal.decrease.circle")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 24)
-                        .foregroundStyle(Color("Default"))
-                        .opacity(isAdditionalFilterUsed ? 1 : 0.3)
-                }
-                .onChange(of: maxPrice) { _, _ in
-                    updateIsAdditionalFilterUsed(maxPrice: maxPrice, isOpenNow: nil)
-                }
-                .onChange(of: isOpenNow) { _, _ in
-                    updateIsAdditionalFilterUsed(maxPrice: nil, isOpenNow: isOpenNow)
-                }
-                .sheet(isPresented: $showPriceFilter) {
-                    FilterSheetView(
-                        maxPrice: Binding(get: { maxPrice ?? 100000 }, set: { maxPrice = $0 }),
-                        isOpenNow: Binding(get: { isOpenNow ?? false }, set: { isOpenNow = $0 })
-                    )
-                }
+            Button {
+                showPriceFilter = true
+            } label: {
+                Image(systemName: "line.3.horizontal.decrease.circle")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 24)
+                    .foregroundStyle(Color("Default"))
+                    .opacity(isFilterUsed ? 1 : 0.3)
+            }
+            .sheet(isPresented: $showPriceFilter) {
+                FilterSheetView(
+                    tempSelectedCategories: filterVM.selectedCategories,
+                    selectedOptionRaw: filterVM.sortBy.rawValue
+                )
+                .environmentObject(filterVM)
             }
             ScrollViewReader { scrollProxy in
                 ScrollView(.horizontal, showsIndicators: false) {
