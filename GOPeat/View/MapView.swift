@@ -78,6 +78,7 @@ struct MapView: View {
     @State private var mapOffset: CGFloat = 0
     @StateObject private var locationManager = LocationManager()
     @StateObject private var viewModel: ModalSearchViewModel
+    @StateObject private var filterVM: FilterViewModel
     @State private var showTutorial = false
 
     let tenants: [Tenant]
@@ -86,7 +87,9 @@ struct MapView: View {
     init(tenants: [Tenant], canteens: [Canteen]) {
         self.tenants = tenants
         self.canteens = canteens
-        self._viewModel = StateObject(wrappedValue: ModalSearchViewModel(tenants: tenants))
+        let filterVM = FilterViewModel()
+        self._filterVM = StateObject(wrappedValue: filterVM)
+        self._viewModel = StateObject(wrappedValue: ModalSearchViewModel(tenants: tenants, filterVM: filterVM))
     }
 
     private func zoomToLocation(_ coordinate: CLLocationCoordinate2D) {
@@ -216,7 +219,9 @@ struct MapView: View {
             if let canteen = selectedCanteen {
                 CanteenDetail(canteen: canteen, dismissAction: {
                     showDetail = false
-                })
+                },
+                              viewModel: ModalSearchViewModel(tenants: canteen.tenants, filterVM: filterVM))
+                .environmentObject(filterVM)
                 .presentationDetents([.fraction(0.8)])
             }
         }
@@ -227,6 +232,7 @@ struct MapView: View {
             ModalSearch(
                 viewModel: viewModel
             )
+            .environmentObject(filterVM)
         }
         .onAppear {
             // Show tutorial immediately when view appears

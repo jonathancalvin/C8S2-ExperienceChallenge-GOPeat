@@ -13,12 +13,7 @@ struct CanteenDetail: View {
     let canteen: Canteen
     var dismissAction: () -> Void
     @StateObject var viewModel: ModalSearchViewModel
-    
-    init(canteen: Canteen, dismissAction: @escaping () -> Void) {
-        self.canteen = canteen
-        self.dismissAction = dismissAction
-        self._viewModel = StateObject(wrappedValue: ModalSearchViewModel(tenants: canteen.tenants))
-    }
+    @EnvironmentObject private var filterVM: FilterViewModel
 
     
     private func showTenant(tenants: [Tenant]) -> some View {
@@ -30,7 +25,8 @@ struct CanteenDetail: View {
             Divider()
             if !tenants.isEmpty {
                 ForEach(tenants) {tenant in
-                    TenantCard(tenant: tenant, selectedCategories: $viewModel.selectedCategories, displayFoods: viewModel.getDisplayFoods(tenant: tenant, searchTerm: viewModel.searchTerm))
+                    TenantCard(tenant: tenant, displayFoods: viewModel.getDisplayFoods(tenant: tenant, searchTerm: viewModel.searchTerm))
+                        .environmentObject(filterVM)
                 }
             } else {
                 Text("Not Found")
@@ -103,7 +99,7 @@ struct CanteenDetail: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         
-                        Filter(categories: viewModel.categories, selectedCategories: $viewModel.selectedCategories, maxPrice: $viewModel.maxPrice, isOpenNow: $viewModel.isOpenNow)
+                        Filter(categories: viewModel.categories, selectedCategories: $filterVM.selectedCategories, maxPrice: $viewModel.maxPrice, isOpenNow: $viewModel.isOpenNow)
                     }
                     
                     // Tenants Section

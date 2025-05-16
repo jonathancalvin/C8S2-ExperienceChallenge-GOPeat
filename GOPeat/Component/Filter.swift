@@ -16,19 +16,20 @@ struct Filter: View {
     @State var showPriceFilter: Bool = false
     @State var showFoodFilter: Bool = false
     @State var showTenantFilter: Bool = false
+    @State var showSortByFilter: Bool = false
+
     @State var isAdditionalFilterUsed: Bool = false
     
+    @EnvironmentObject var filterVM: FilterViewModel
+    
     private var foodCategories: [String] {
-        get {
-            return selectedCategories.filtered(by: AppStorageManager.shared.foodCategories)
-        }
+        filterVM.selectedFoodCategories
     }
     private var tenantCategories: [String] {
-        get {
-            return selectedCategories.filtered(by: AppStorageManager.shared.tenantCategories)
-        }
+        filterVM.selectedTenantCategories
     }
     // Function to return conflicting category
+    
     private func conflictingCategory(for category: String) -> String? {
         if category.hasPrefix("Non-") {
             // If start with "Non-", check category without "Non-"
@@ -117,6 +118,15 @@ struct Filter: View {
                         .sheet(isPresented: $showTenantFilter) {
                             TenantFilterView(selectedCategories: $selectedCategories, present: $showTenantFilter)
                                 .presentationDetents([.fraction(0.25)])
+                                .presentationDragIndicator(.visible)
+                        }
+                        
+                        FilterButton(name: "Sort By", isSelected: filterVM.sortBy != .none, action: {
+                            showSortByFilter = true
+                        })
+                        .sheet(isPresented: $showSortByFilter) {
+                            SortByView(sortBy: $filterVM.sortBy, present: $showSortByFilter)
+                                .presentationDetents([.fraction(0.42)])
                                 .presentationDragIndicator(.visible)
                         }
                         

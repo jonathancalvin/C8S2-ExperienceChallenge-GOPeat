@@ -70,18 +70,18 @@ struct ContentView: View {
                image: "LaDing",
                contactPerson: "08123456789",
                preorderInformation: true,
-                            operationalHours: "09:00-14:00", isHalal: true, canteen: greenEatery, priceRange: "17.000-35.000")
+                            operationalHours: "09:00-14:00", isHalal: true, canteen: greenEatery, priceRange: "20.000-35.000")
         let dapurMiminTenant = Tenant(name: "Dapur Mimin",
                                                 image: "dapurMimin",
                                                 contactPerson: "-",
                                                 preorderInformation: false,
-                                                operationalHours: "11:00-17:00", isHalal: true, canteen: gOP6, priceRange: "18.000-25.000")
+                                                operationalHours: "11:00-17:00", isHalal: true, canteen: gOP6, priceRange: "26.000-30.000")
                 // Create Tenant -- GOP 6 (Nasi Padang)
                 let nasiPadangTenant = Tenant(name: "Nasi Kapau Nusantara", // Example name
                                                 image: "NasiPadang", // Replace with actual image name
                                                 contactPerson: "08987654321",
                                                 preorderInformation: true,
-                                                operationalHours: "10:00-16:00", isHalal: true, canteen: gOP6, priceRange: "15.000-30.000")
+                                                operationalHours: "10:00-16:00", isHalal: true, canteen: gOP6, priceRange: "40.000-50.000")
         // TO DO - create tenant for each canteen (gOP6, gOP1, theBreeze)
         
         // Masukkan Tenant ke context
@@ -110,7 +110,7 @@ struct ContentView: View {
         
         let laDingFoods = [
             Food(name: "Soto Mie", description: "Soto mie khas Bogor", categories: [.soup, .nonSpicy, .savory], tenant: laDing, price: 23000, image: "defaultFood"),
-            Food(name: "Sop Iga", description: "Sup iga sapi", categories: [.soup, .nonSpicy, .savory], tenant: laDing, price: 25000, image: "defaultFood"),
+            Food(name: "Sop Iga", description: "Sup iga sapi", categories: [.soup, .nonSpicy, .savory], tenant: laDing, price: 35000, image: "defaultFood"),
             Food(name: "Sop Daging", description: "Sup daging sapi", categories: [.soup, .nonSpicy, .savory], tenant: laDing, price: 24000, image: "defaultFood"),
             Food(name: "Somay", description: "Siomay khas Bandung", categories: [.savory], tenant: laDing, price: 22000, image: "defaultFood"),
             Food(name: "Nasi Uduk", description: "Nasi gurih khas Jakarta", categories: [.savory], tenant: laDing, price: 20000, image: "defaultFood")

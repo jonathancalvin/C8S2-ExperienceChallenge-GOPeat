@@ -14,3 +14,29 @@ enum SortOption: String, CaseIterable, Identifiable {
     case affordablePrice = "Affordable Price"
     var id: String { self.rawValue }
 }
+
+extension SortOption {
+    var foodSortClosure: ((Food,Food)->Bool)? {
+        switch self {
+        case .none, .nearMe:
+            return nil
+        case .premiumPrice:
+            return { $0.price > $1.price}
+        case .affordablePrice:
+            return { $0.price < $1.price }
+        }
+    }
+    var tenantSortClosure: ((Tenant, Tenant)->Bool)? {
+        switch self {
+        case .none:
+            return nil
+        case .nearMe:
+            return nil
+            //TO DO: logic to determine nearme
+        case .premiumPrice:
+            return { PriceUtil.getMinPrice(from: $0.priceRange) > PriceUtil.getMinPrice(from: $1.priceRange)}
+        case .affordablePrice:
+            return { PriceUtil.getMinPrice(from: $0.priceRange) < PriceUtil.getMinPrice(from: $1.priceRange)}
+        }
+    }
+}

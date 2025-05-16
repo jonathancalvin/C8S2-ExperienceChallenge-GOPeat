@@ -18,21 +18,20 @@ struct TenantView: View {
     let tenant: Tenant
     let symbol: String
     let color: Color
-    @State var selectedCategories: [String]
     @StateObject private var viewModel: TenantViewModel
+    @EnvironmentObject private var filterVM: FilterViewModel
     
     @State private var maxPrice: Double? = nil
     @State private var isOpenNow: Bool? = nil
 
     
-    init(tenant: Tenant, foods: [Food], selectedCategories: [String]) {
+    init(tenant: Tenant, foods: [Food], tenantVM: TenantViewModel) {
         self.foods = foods
         self.tenant = tenant
         let isHalal = tenant.isHalal ?? false
         self.symbol = isHalal ? "checkmark.circle.fill" : "xmark.circle.fill"
         self.color = isHalal ? .green : .red
-        self.selectedCategories = selectedCategories
-        _viewModel = StateObject(wrappedValue: TenantViewModel(foods: foods))
+        self._viewModel = StateObject(wrappedValue: tenantVM)
         
         let appear = UINavigationBarAppearance()
         
@@ -114,10 +113,7 @@ struct TenantView: View {
                         imageSlider(image: sampleImages)
                         
                         // Filter Component
-                        Filter(categories: viewModel.categories, selectedCategories: $selectedCategories, maxPrice: $maxPrice, isOpenNow: $isOpenNow)
-                            .onChange(of: selectedCategories) { _, _ in
-                                viewModel.updateFilteredFood(selectedCategories: selectedCategories)
-                            }
+                        Filter(categories: viewModel.categories, selectedCategories: $filterVM.selectedCategories, maxPrice: $maxPrice, isOpenNow: $isOpenNow)
                             .padding(.horizontal, 20)
                         
                         // List of Food
@@ -140,10 +136,6 @@ struct TenantView: View {
                     .padding(.vertical)
                 }
                 .scrollIndicators(.hidden)
-            }
-            .onAppear(){
-                selectedCategories = selectedCategories.filtered(by: AppStorageManager.shared.foodCategories)
-                viewModel.updateFilteredFood(selectedCategories: selectedCategories)
             }
             .ignoresSafeArea(edges: .bottom)
             .navigationBarTitleDisplayMode(.inline)
@@ -172,6 +164,10 @@ struct FoodCard: View {
                     .font(.headline)
                     
                 Text(food.desc)
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Text("\(food.price)")
                     .font(.subheadline)
                     .foregroundColor(.secondary)
 

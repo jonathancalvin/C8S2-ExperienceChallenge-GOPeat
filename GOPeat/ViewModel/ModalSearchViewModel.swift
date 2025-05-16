@@ -6,39 +6,38 @@
 //
 
 import SwiftUI
-
+import Combine
 final class ModalSearchViewModel: ObservableObject{
     @Published var searchTerm: String = ""
     @Published var sheeHeight: PresentationDetent = .fraction(0.1)
     @Published var filteredTenants: [Tenant] = []
     @Published var recentSearch: [String] = []
-    @Published var selectedCategories: [String] = [] {
-        didSet {
-            updateFilteredTenant()
-        }
-    }
-    @Published var maxPrice: Double? = 100000 {
-        didSet {
-            updateFilteredTenant()
-        }
-    }
-    @Published var isOpenNow: Bool? = false {
-        didSet {
-            updateFilteredTenant()
-        }
-    }
+    @Published var maxPrice: Double? = 100000
+    @Published var isOpenNow: Bool? = false
+    private var cancellables = Set<AnyCancellable>()
+    private let filterVM: FilterViewModel
     let tenants: [Tenant]
     let categories: [String] = AppStorageManager.shared.allCategories
     var selectedFoodCategories: [String] {
-        get {
-            return selectedCategories.filtered(by: AppStorageManager.shared.foodCategories)
-        }
+        filterVM.selectedFoodCategories
     }
     
-    init(tenants: [Tenant]) {
+    init(tenants: [Tenant], filterVM: FilterViewModel) {
         self.tenants = tenants
         self.filteredTenants = tenants
-        self.selectedCategories = AppStorageManager.shared.fixCategories ?? []
+        self.filterVM = filterVM
+        addSubscribers()
+    }
+    private func addSubscribers() {
+        Publishers.CombineLatest3(filterVM.$selectedCategories, filterVM.$sortBy, $isOpenNow)
+            .dropFirst()
+            .debounce(for: .nanoseconds(1), scheduler: RunLoop.main)
+            .sink { [weak self] _, _, _ in
+                guard let self = self else {return}
+                self.updateFilteredTenant()
+            }
+            .store(in: &cancellables)
+
     }
     func getDisplayFoods(tenant: Tenant, searchTerm: String) -> [Food] {
         let loweredCaseString = searchTerm.lowercased()
@@ -76,8 +75,11 @@ final class ModalSearchViewModel: ObservableObject{
     
     func updateFilteredTenant() {
         //Filter Tenant by Halal / Non-Halal
-        let containsHalal = selectedCategories.contains("Halal")
-        let containsNonHalal = selectedCategories.contains("Non-Halal")
+        for category in filterVM.selectedCategories {
+            print(category)
+        }
+        let containsHalal = filterVM.selectedCategories.contains("Halal")
+        let containsNonHalal = filterVM.selectedCategories.contains("Non-Halal")
         
         var halalTenants = tenants
         
@@ -93,6 +95,10 @@ final class ModalSearchViewModel: ObservableObject{
                 Set(selectedFoodCategories).isSubset(of: Set(food.categories.map { $0.rawValue }))
             })
         }
+        filteredTenants.sort(using: filterVM.sortBy.tenantSortClosure)
+        for tenant in filteredTenants {
+            tenant.foods.sort(using: filterVM.sortBy.foodSortClosure)
+        }
     }
     func saveRecentSearch(searchTerm: String) {
         recentSearch.removeAll { $0.lowercased() == searchTerm.lowercased() }
@@ -104,7 +110,7 @@ final class ModalSearchViewModel: ObservableObject{
     func onClose() {
         sheeHeight = .fraction(0.1)
         searchTerm = ""
-        selectedCategories = []
+        filterVM.selectedCategories = AppStorageManager.shared.fixCategories ?? []
         filteredTenants = tenants
         isOpenNow = false
         maxPrice = 100000

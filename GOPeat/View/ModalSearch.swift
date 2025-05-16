@@ -6,7 +6,7 @@ struct ModalSearch: View {
     @FocusState var isTextFieldFocused: Bool
     private let maxHeight: PresentationDetent = .fraction(0.9)
     @ObservedObject var viewModel: ModalSearchViewModel
-    
+    @EnvironmentObject private var filterVM: FilterViewModel
     private func showTenant(tenants: [Tenant]) -> some View {
         VStack(alignment: .leading) {
             Text("Tenants")
@@ -16,7 +16,8 @@ struct ModalSearch: View {
             Divider()
             if !tenants.isEmpty {
                 ForEach(tenants) {tenant in
-                    TenantCard(tenant: tenant, selectedCategories: $viewModel.selectedCategories, displayFoods: viewModel.getDisplayFoods(tenant: tenant, searchTerm: viewModel.searchTerm))
+                    TenantCard(tenant: tenant, displayFoods: viewModel.getDisplayFoods(tenant: tenant, searchTerm: viewModel.searchTerm))
+                        .environmentObject(filterVM)
                 }
             } else {
                 Text("Not Found")
@@ -62,7 +63,7 @@ struct ModalSearch: View {
                         viewModel.saveRecentSearch(searchTerm: viewModel.searchTerm)
                       })
             if (viewModel.sheeHeight != .fraction(0.1)){
-                Filter(categories: viewModel.categories, selectedCategories: $viewModel.selectedCategories, maxPrice: $viewModel.maxPrice, isOpenNow: $viewModel.isOpenNow)
+                Filter(categories: viewModel.categories, selectedCategories: $filterVM.selectedCategories, maxPrice: $viewModel.maxPrice, isOpenNow: $viewModel.isOpenNow)
                 ScrollView(.vertical){
                     //Recent search (max 5)
                     if !viewModel.recentSearch.isEmpty {

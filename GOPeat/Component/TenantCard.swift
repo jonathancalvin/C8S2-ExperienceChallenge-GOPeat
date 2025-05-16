@@ -10,7 +10,7 @@ import SwiftUI
 struct TenantCard: View {
     let tenant: Tenant
     @State var showTenantDetail = false
-    @Binding var selectedCategories: [String]
+    @EnvironmentObject var filterVM: FilterViewModel
     let displayFoods: [Food]
     private func infoRow(label: Image, value: String) -> some View {
         HStack(alignment: .top) {
@@ -100,7 +100,8 @@ struct TenantCard: View {
         .fullScreenCover(isPresented: $showTenantDetail) {
             showTenantDetail = false
         } content: {
-            TenantView(tenant: tenant, foods: tenant.foods, selectedCategories: selectedCategories)
+            TenantView(tenant: tenant, foods: tenant.foods, tenantVM: TenantViewModel(foods: tenant.foods, filterVM: filterVM))
+                .environmentObject(filterVM)
         }
     }
 }
@@ -112,5 +113,5 @@ struct TenantCard: View {
                                              contactPerson: "08123456789",
                                              preorderInformation: true,
                                              operationalHours: "09:00-14:00", isHalal: true, canteen: nil, priceRange: "16.000-25.000")
-    TenantCard(tenant: tenant,selectedCategories: $selectedCategories, displayFoods: tenant.foods)
+    TenantCard(tenant: tenant, displayFoods: tenant.foods)
 }
