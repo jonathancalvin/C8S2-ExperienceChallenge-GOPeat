@@ -46,6 +46,25 @@ struct TenantCard: View {
         }
 
     }
+    @ViewBuilder
+    func foodImage(for food: Food) -> some View {
+        let isDefault = food.image == "defaultFood"
+        let image: Image = isDefault
+            ? Image(systemName: "fork.knife.circle")
+            : Image(food.image)
+
+        image
+            .resizable()
+            .foregroundStyle(isDefault ? Color("Gray") : Color.primary)
+            .padding(isDefault ? 8 : 0)
+            .frame(maxWidth: 75, maxHeight: 75)
+            .scaledToFill()
+            .clipShape(RoundedRectangle(cornerRadius: 10))
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color(.systemGray6), lineWidth: isDefault ? 3 : 0)
+            )
+    }
     var body: some View {
         let activeDollarSign = PriceUtil.getActiveDollarSign(for: PriceUtil.getMinPrice(from: tenant.priceRange))
         Button(action: {
@@ -55,7 +74,7 @@ struct TenantCard: View {
                 HStack {
                     Image(tenant.image)
                         .resizable()
-                        .frame(maxWidth: 100, maxHeight: 100)
+                        .frame(maxWidth: 120, maxHeight: 110)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
                     tenantDetail(activeDollarSign: activeDollarSign)
                     Spacer()
@@ -64,15 +83,7 @@ struct TenantCard: View {
                     HStack(spacing: 10) {
                         ForEach(displayFoods) {food in
                             VStack(alignment: .leading) {
-                                (
-                                    food.image == "defaultFood" ?
-                                        Image(systemName: "fork.knife.circle") :
-                                        Image(food.image)
-                                )
-                                .resizable()
-                                .frame(maxWidth: 75, maxHeight: 75)
-                                .scaledToFill()
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
+                                foodImage(for: food)
 
                                 Text("Rp \(food.price)")
                                     .font(.subheadline)
@@ -91,7 +102,7 @@ struct TenantCard: View {
                 }
             }
             .padding(10)
-            .background(Color("Gray"))
+            .background(.white.shadow(ShadowStyle.drop(radius: 3)))
             .clipShape(RoundedRectangle(cornerRadius: 10))
             .foregroundColor(Color("Default"))
 

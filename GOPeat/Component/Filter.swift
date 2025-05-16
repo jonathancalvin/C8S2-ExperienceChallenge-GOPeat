@@ -9,6 +9,7 @@ import SwiftUI
 
 struct Filter: View {
     let categories: [String]
+    let filterMode: FilterMode
     @Binding var selectedCategories: [String]
     
     @State var showPriceFilter: Bool = false
@@ -22,6 +23,14 @@ struct Filter: View {
     
     @EnvironmentObject var filterVM: FilterViewModel
     
+    private var sortByOptions: [SortOption] {
+        get {
+            if filterMode == .tenantView {
+                return [SortOption.premiumPrice, SortOption.affordablePrice]
+            }
+            return AppStorageManager.shared.allSortByOptions
+        }
+    }
     private var foodCategories: [String] {
         filterVM.selectedFoodCategories
     }
@@ -77,7 +86,7 @@ struct Filter: View {
             ScrollViewReader { scrollProxy in
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 10) {
-                        FilterButton(name: "Food", isSelected: !foodCategories.isEmpty, action: {
+                        FilterButton(name: "Cuisines", isSelected: !foodCategories.isEmpty, action: {
                             showFoodFilter = true
                         })
                         .sheet(isPresented: $showFoodFilter) {
@@ -85,26 +94,29 @@ struct Filter: View {
                                 .presentationDetents([.fraction(0.3)])
                                 .presentationDragIndicator(.visible)
                         }
-                        
-                        FilterButton(name: "Tenant", isSelected:!tenantCategories.isEmpty, action: {
-                            showTenantFilter = true
-                        })
-                        .sheet(isPresented: $showTenantFilter) {
-                            TenantFilterView(selectedCategories: $selectedCategories, present: $showTenantFilter)
-                                .presentationDetents([.fraction(0.25)])
-                                .presentationDragIndicator(.visible)
+                        if filterMode != .tenantView {
+                            FilterButton(name: "Tenant", isSelected:!tenantCategories.isEmpty, action: {
+                                showTenantFilter = true
+                            })
+                            .sheet(isPresented: $showTenantFilter) {
+                                TenantFilterView(selectedCategories: $selectedCategories, present: $showTenantFilter)
+                                    .presentationDetents([.fraction(0.25)])
+                                    .presentationDragIndicator(.visible)
+                            }
                         }
                         
                         FilterButton(name: "Sort By", isSelected: filterVM.sortBy != .none, action: {
                             showSortByFilter = true
                         })
                         .sheet(isPresented: $showSortByFilter) {
-                            SortByView(sortBy: $filterVM.sortBy, present: $showSortByFilter)
+                            SortByView(options: sortByOptions
+                                       ,sortBy: $filterVM.sortBy, present: $showSortByFilter)
                                 .presentationDetents([.fraction(0.42)])
                                 .presentationDragIndicator(.visible)
                         }
                         
                     }
+                    .padding(5)
                 }
                 .onChange(of: selectedCategories, initial: selectedCategories.isEmpty) { _, _ in
                     withAnimation {
@@ -114,4 +126,12 @@ struct Filter: View {
             }.frame(maxHeight: 50)
         }
     }
+}
+
+#Preview {
+    @Previewable @State var selectedCategories = ["Halal", "Non-Spicy"]
+    @Previewable @StateObject var filterVM = FilterViewModel()
+    Filter(categories: AppStorageManager.shared.foodCategories, filterMode: FilterMode.none, selectedCategories: $selectedCategories)
+        .environmentObject(filterVM)
+
 }

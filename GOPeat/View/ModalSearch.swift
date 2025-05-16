@@ -8,12 +8,14 @@ struct ModalSearch: View {
     @ObservedObject var viewModel: ModalSearchViewModel
     @EnvironmentObject private var filterVM: FilterViewModel
     private func showTenant(tenants: [Tenant]) -> some View {
-        VStack(alignment: .leading) {
-            Text("Tenants")
-                .font(.headline)
-                .fontWeight(.bold)
-                .padding(0)
-            Divider()
+        VStack(alignment: .leading, spacing: 20) {
+            VStack(alignment: .leading){
+                Text("Tenants")
+                    .font(.headline)
+                    .fontWeight(.bold)
+                    .padding(0)
+                Divider()
+            }
             if !tenants.isEmpty {
                 ForEach(tenants) {tenant in
                     TenantCard(tenant: tenant, displayFoods: viewModel.getDisplayFoods(tenant: tenant, searchTerm: viewModel.searchTerm))
@@ -63,7 +65,7 @@ struct ModalSearch: View {
                         viewModel.saveRecentSearch(searchTerm: viewModel.searchTerm)
                       })
             if (viewModel.sheeHeight != .fraction(0.1)){
-                Filter(categories: viewModel.categories, selectedCategories: $filterVM.selectedCategories)
+                Filter(categories: viewModel.categories, filterMode: FilterMode.none, selectedCategories: $filterVM.selectedCategories)
                 ScrollView(.vertical){
                     //Recent search (max 5)
                     if !viewModel.recentSearch.isEmpty {
@@ -76,6 +78,7 @@ struct ModalSearch: View {
             }
         }
         .padding()
+        .background(Color(.systemGray6))
         .presentationDetents([.fraction(0.1), .fraction(0.7), .fraction(0.9)], selection: $viewModel.sheeHeight)
         .interactiveDismissDisabled()
         .presentationBackgroundInteraction(.enabled(upThrough: maxHeight))

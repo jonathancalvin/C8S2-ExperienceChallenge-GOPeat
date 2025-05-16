@@ -41,18 +41,18 @@ struct CategoryFilter: View {
                             let index = i * column + j
                             if index < categories.count {
                                 let category = categories[index]
-                                Button {
-                                    if !selectedCategories.contains(category) {
-                                        if let conflictCategory = conflictingCategory(for: category) {
-                                            selectedCategories.removeAll { $0 == conflictCategory }
+                                
+                                    CategoryToogleButton(name: category, isSelected: selectedCategories.contains(category),
+                                                         action: {
+                                        if !selectedCategories.contains(category) {
+                                            if let conflictCategory = conflictingCategory(for: category) {
+                                                selectedCategories.removeAll { $0 == conflictCategory }
+                                            }
+                                            selectedCategories.append(category)
+                                        } else {
+                                            selectedCategories.removeAll { $0 == category }
                                         }
-                                        selectedCategories.append(category)
-                                    } else {
-                                        selectedCategories.removeAll { $0 == category }
-                                    }
-                                } label: {
-                                    CategoryToogleButton(name: category, isSelected: selectedCategories.contains(category))
-                                }
+                                    })
                             } else {
                                 Spacer()
                             }

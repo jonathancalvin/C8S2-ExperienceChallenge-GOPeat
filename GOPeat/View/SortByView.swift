@@ -8,11 +8,12 @@
 import SwiftUI
 
 struct SortByView: View {
-    let options:[String] = AppStorageManager.shared.allSortByOptions
+    let options:[SortOption]
     @Binding var present: Bool
     @Binding var sortBy: SortOption
     @State private var selectedOptionRaw: String
-    init(sortBy: Binding<SortOption>, present: Binding<Bool>) {
+    init(options: [SortOption] ,sortBy: Binding<SortOption>, present: Binding<Bool>) {
+        self.options = options
         self._sortBy = sortBy
         self._present = present
         self._selectedOptionRaw = State(initialValue: sortBy.wrappedValue.rawValue)
@@ -33,7 +34,7 @@ struct SortByView: View {
         VStack(spacing: 10){
             Spacer()
             RadioButtonGroup(
-                options: options,
+                options: options.map { $0.rawValue },
                 title: "Sort By",
                 selectedOption: $selectedOptionRaw
             )
@@ -50,5 +51,5 @@ struct SortByView: View {
 #Preview {
     @Previewable @State var sortBy: SortOption = SortOption.none
     @Previewable @State var present: Bool = false
-    SortByView(sortBy: $sortBy, present: $present)
+    SortByView(options: AppStorageManager.shared.allSortByOptions,sortBy: $sortBy, present: $present)
 }

@@ -50,7 +50,7 @@ struct FilterSheetView: View {
                     )
                     
                     RadioButtonGroup(
-                        options: AppStorageManager.shared.allSortByOptions,
+                        options: AppStorageManager.shared.allSortByOptions.map {$0.rawValue},
                         title: "Sort By",
                         selectedOption: $selectedOptionRaw
                     )

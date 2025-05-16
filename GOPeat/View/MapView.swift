@@ -217,10 +217,13 @@ struct MapView: View {
             }
         }) {
             if let canteen = selectedCanteen {
-                CanteenDetail(canteen: canteen, dismissAction: {
+                CanteenDetail(
+                    canteen: canteen,
+                    dismissAction: {
                     showDetail = false
-                },
-                              viewModel: ModalSearchViewModel(tenants: canteen.tenants, filterVM: filterVM))
+                    },
+                    viewModel: ModalSearchViewModel(tenants: canteen.tenants, filterVM: filterVM)
+                )
                 .environmentObject(filterVM)
                 .presentationDetents([.fraction(0.8)])
             }

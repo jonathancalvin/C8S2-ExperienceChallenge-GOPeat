@@ -51,6 +51,6 @@ struct RadioButtonGroup: View {
 }
 #Preview {
     @Previewable @State var selectedCategory: String = "None"
-    var categories: [String] = AppStorageManager.shared.allSortByOptions
+    var categories: [String] = AppStorageManager.shared.allSortByOptions.map {$0.rawValue}
     RadioButtonGroup(options: categories,title: "Sort By", selectedOption: $selectedCategory)
 }

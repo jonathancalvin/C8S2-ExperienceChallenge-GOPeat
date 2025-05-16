@@ -32,7 +32,7 @@ struct ContentView: View {
             image: "GOP6",
            desc: "Popular food court with multiple food stalls",
            operationalTime: "Monday - Saturday: 6:30 AM - 8 PM",
-           amenities: ["Prayer Room", "ATM", "Printing Services"]
+           amenities: ["DIsabled Access", "ATM", "Printing Services"]
         )
         let gOP1 = Canteen(name: "GOP 1 Canteen",
             latitude: -6.301780422262836,

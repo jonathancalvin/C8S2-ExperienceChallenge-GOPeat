@@ -15,6 +15,13 @@ enum SortOption: String, CaseIterable, Identifiable {
     var id: String { self.rawValue }
 }
 
+enum FilterMode {
+    case none
+    case fixCategories
+    case dynamicCategories
+    case tenantView
+}
+
 extension SortOption {
     var foodSortClosure: ((Food,Food)->Bool)? {
         switch self {

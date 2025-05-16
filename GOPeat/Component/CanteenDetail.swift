@@ -99,7 +99,7 @@ struct CanteenDetail: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         
-                        Filter(categories: viewModel.categories, selectedCategories: $filterVM.selectedCategories)
+                        Filter(categories: viewModel.categories, filterMode: .none,selectedCategories: $filterVM.selectedCategories)
                     }
                     
                     // Tenants Section
@@ -122,6 +122,7 @@ struct CanteenDetail: View {
                 }
                 .padding()
             }
+            .background(Color(.systemGray6))
             .navigationTitle("Location Details")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -145,7 +146,6 @@ struct CanteenDetail: View {
         case "Live Music": return "music.mic"
         case "Event Space": return "calendar"
         case "Premium Dining": return "star"
-        case "Prayer Room": return "mosque" // Added prayer room icon
         default: return "mappin"
         }
     }
