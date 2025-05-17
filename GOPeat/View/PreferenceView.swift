@@ -32,7 +32,7 @@ struct PreferenceView: View {
                                 .fontWeight(.semibold)
                         }
                         Text("Choose what suits your diet and lifestyle — from halal to non-spicy or anything in between.")
-                        CategoryFilter(categories: Food.availableFixedCategory, selectedCategories: $selectedCategories,
+                        CategoryFilter(categories: Food.availableFixedCategory, filterMode: .dynamicCategories, selectedCategories: $selectedCategories,
                                        title: "",
                                        column: 4
                         )

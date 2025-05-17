@@ -32,9 +32,9 @@ struct FoodFilterView: View {
     var body: some View {
         VStack(alignment: .leading,spacing: 10) {
             Spacer()
-            CategoryFilter(categories: AppStorageManager.shared.foodCategories, selectedCategories: $tempSelectedCategories,
+            CategoryFilter(categories: AppStorageManager.shared.foodCategories, filterMode: FilterMode.dynamicCategories, selectedCategories: $tempSelectedCategories,
                title: "Cuisine Type",
-                           column: 5
+                           column: 4
             )
             .padding()
             FilterActionBar(onClear: {

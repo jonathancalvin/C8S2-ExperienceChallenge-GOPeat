@@ -16,7 +16,7 @@ struct CategoryToogleButton: View {
             action()
         } label: {
             Text(name)
-                .font(.caption)
+                .font(.subheadline)
                 .fontWeight(isSelected ? .medium : .regular)
                 .foregroundStyle(isSelected ? Color("NonDefault") : Color.black)
                 .padding(.horizontal, 8)

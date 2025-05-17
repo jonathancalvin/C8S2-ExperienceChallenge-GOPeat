@@ -91,7 +91,7 @@ struct Filter: View {
                         })
                         .sheet(isPresented: $showFoodFilter) {
                             FoodFilterView(selectedCategories: $selectedCategories, present: $showFoodFilter)
-                                .presentationDetents([.fraction(0.3)])
+                                .presentationDetents([.fraction(0.35)])
                                 .presentationDragIndicator(.visible)
                         }
                         if filterMode != .tenantView {

@@ -32,7 +32,7 @@ struct TenantFilterView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
             Spacer()
-            CategoryFilter(categories: AppStorageManager.shared.tenantCategories, selectedCategories: $tempSelectedCategories,
+            CategoryFilter(categories: AppStorageManager.shared.tenantCategories, filterMode: FilterMode.dynamicCategories, selectedCategories: $tempSelectedCategories,
                 title: "Tenant",
                            column: 3
             )

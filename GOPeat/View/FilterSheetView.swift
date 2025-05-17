@@ -31,45 +31,56 @@ struct FilterSheetView: View {
         dismiss()
     }
     var body: some View {
-        ZStack {
-            Color.white
+        NavigationStack {
             ScrollView(.vertical) {
                 VStack(alignment: .leading, spacing: 20) {
-                    Text("Filter Restaurant")
-                        .font(.largeTitle)
-                        .fontWeight(.bold)
-                        .padding(.vertical, 20)
-                    
-                    CategoryFilter(categories: AppStorageManager.shared.foodCategories, selectedCategories: $tempSelectedCategories,
-                       title: "Cuisine Type",
-                                   column: 5
+                    CategoryFilter(
+                        categories: AppStorageManager.shared.foodCategories,
+                        filterMode: .dynamicCategories,
+                        selectedCategories: $tempSelectedCategories,
+                        title: "Cuisine Type",
+                        column: 4
                     )
-                    CategoryFilter(categories: AppStorageManager.shared.tenantCategories, selectedCategories: $tempSelectedCategories,
-                        title: "Tenant",
-                                   column: 3
-                    )
-                    
+
                     RadioButtonGroup(
-                        options: AppStorageManager.shared.allSortByOptions.map {$0.rawValue},
+                        options: AppStorageManager.shared.allSortByOptions.map { $0.rawValue },
                         title: "Sort By",
                         selectedOption: $selectedOptionRaw
                     )
+                    
+                    CategoryFilter(
+                        categories: AppStorageManager.shared.tenantCategories,
+                        filterMode: .dynamicCategories,
+                        selectedCategories: $tempSelectedCategories,
+                        title: "Tenant",
+                        column: 3
+                    )
+
+                    Divider()
+                        .frame(height: 2)
+                        .background(.black)
+
+                    CategoryFilter(
+                        categories: AppStorageManager.shared.fixCategories ?? [],
+                        filterMode: .fixCategories,
+                        selectedCategories: $filterVM.selectedCategories,
+                        title: "Fix Categories",
+                        column: 4
+                    )
                 }
+                .padding()
             }
-            .padding()
-            VStack {
-                Spacer()
-                
-                FilterActionBar(onClear: {
-                    onClear()
-                }, onApply: {
-                    onApply()
-                }, isDisabled:
-                    isDisabled
+            .navigationTitle("Filter Restaurant")
+            .navigationBarTitleDisplayMode(.inline)
+            .safeAreaInset(edge: .bottom) {
+                FilterActionBar(
+                    onClear: { onClear() },
+                    onApply: { onApply() },
+                    isDisabled: isDisabled
                 )
+                .background(.white)
             }
         }
-        .presentationDragIndicator(.visible)
     }
 }
 

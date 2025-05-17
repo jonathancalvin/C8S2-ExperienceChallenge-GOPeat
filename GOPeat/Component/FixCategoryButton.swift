@@ -16,6 +16,7 @@ struct FixCategoryButton: View {
         } label: {
             HStack(spacing: 3){
                 Text(name)
+                    .font(.subheadline)
                     .padding(.leading, 3)
                 Image(systemName: "xmark")
             }
