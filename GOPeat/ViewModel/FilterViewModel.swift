@@ -10,6 +10,7 @@ import SwiftUI
 final class FilterViewModel: ObservableObject {
     @Published var selectedCategories: [String] = AppStorageManager.shared.fixCategories ?? []
     @Published var sortBy: SortOption = .none
+    @Published var selectedPriceRanges: [PriceRangeOption] = AppStorageManager.shared.allPriceRangeOptions
     var selectedFoodCategories: [String] {
         get {
             return selectedCategories.filtered(by: AppStorageManager.shared.foodCategories)

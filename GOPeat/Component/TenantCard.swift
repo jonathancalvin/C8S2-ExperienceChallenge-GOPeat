@@ -19,7 +19,7 @@ struct TenantCard: View {
         }
         .font(.subheadline)
     }
-    private func tenantDetail(activeDollarSign: Int) -> some View {
+    private func tenantDetail(priceRangeOption: PriceRangeOption) -> some View {
         VStack(alignment: .leading) {
             HStack(alignment: .center,spacing: 0){
                 Text(tenant.name)
@@ -33,14 +33,7 @@ struct TenantCard: View {
                     .resizable()
                     .frame(maxWidth: 25, maxHeight: 25)
             }
-            HStack(spacing: 2) {
-                ForEach(0..<4){ index in
-                    Image(systemName: "dollarsign")
-                        .resizable()
-                        .frame(maxWidth: 8, maxHeight: 13)
-                        .opacity(index < activeDollarSign ? 1: 0.5)
-                }
-            }
+            PriceRangeIndicator(level: priceRangeOption.id)
             infoRow(label: Image(systemName: "clock"), value: tenant.operationalHours)
             infoRow(label: Image(systemName: "phone"), value: tenant.contactPerson)
         }
@@ -66,7 +59,7 @@ struct TenantCard: View {
             )
     }
     var body: some View {
-        let activeDollarSign = PriceUtil.getActiveDollarSign(for: PriceUtil.getMinPrice(from: tenant.priceRange))
+        let priceRangeOption = PriceUtil.getPriceRangeOption(for: PriceUtil.getMinPrice(from: tenant.priceRange))
         Button(action: {
             showTenantDetail = true
         }) {
@@ -76,7 +69,7 @@ struct TenantCard: View {
                         .resizable()
                         .frame(maxWidth: 120, maxHeight: 110)
                         .clipShape(RoundedRectangle(cornerRadius: 10))
-                    tenantDetail(activeDollarSign: activeDollarSign)
+                    tenantDetail(priceRangeOption : priceRangeOption)
                     Spacer()
                 }
                 ScrollView(.horizontal, showsIndicators: false) {

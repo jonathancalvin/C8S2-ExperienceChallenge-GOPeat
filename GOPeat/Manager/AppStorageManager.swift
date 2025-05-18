@@ -40,4 +40,5 @@ final class AppStorageManager {
     let tenantCategories: [String] = CategoryType.tenant.categories
     let allCategories: [String] = CategoryType.food.categories + CategoryType.tenant.categories
     let allSortByOptions: [SortOption] = SortOption.allCases
+    let allPriceRangeOptions: [PriceRangeOption] = PriceRangeOption.allCases
 }

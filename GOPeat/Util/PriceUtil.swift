@@ -13,16 +13,16 @@ struct PriceUtil {
         let min = parts.first?.replacingOccurrences(of: ".", with: "") ?? "0"
         return Int(min) ?? 0
     }
-    static func getActiveDollarSign(for price: Int) -> Int {
+    static func getPriceRangeOption(for price: Int) -> PriceRangeOption {
         switch price{
             case ..<16000:
-                return 1
+            return PriceRangeOption.below16k
             case 16000..<25000:
-                return 2
+            return PriceRangeOption.from16kTo25k
             case 25000..<40000:
-                return 3
+            return PriceRangeOption.from25kTo40k
             default:
-                return 4
+            return PriceRangeOption.over40k
         }
     }
 }

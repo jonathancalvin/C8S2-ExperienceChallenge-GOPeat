@@ -22,6 +22,24 @@ enum FilterMode {
     case tenantView
 }
 
+enum PriceRangeOption: Int, CaseIterable, Identifiable {
+    case below16k = 1
+    case from16kTo25k = 2
+    case from25kTo40k = 3
+    case over40k = 4
+
+    var id: Int { rawValue }
+
+    var label: String {
+        switch self {
+        case .below16k: return "Below Rp16.000"
+        case .from16kTo25k: return "Rp 16.000 to Rp25.000"
+        case .from25kTo40k: return "Rp 25.000 to Rp40.000"
+        case .over40k: return "Over Rp40.000"
+        }
+    }
+}
+
 extension SortOption {
     var foodSortClosure: ((Food,Food)->Bool)? {
         switch self {
