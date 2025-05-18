@@ -27,10 +27,10 @@ final class ModalSearchViewModel: ObservableObject{
         addSubscribers()
     }
     private func addSubscribers() {
-        Publishers.CombineLatest(filterVM.$selectedCategories, filterVM.$sortBy)
+        Publishers.CombineLatest3(filterVM.$selectedCategories, filterVM.$sortBy, filterVM.$selectedPriceRanges)
             .dropFirst()
             .debounce(for: .nanoseconds(1), scheduler: RunLoop.main)
-            .sink { [weak self] _, _ in
+            .sink { [weak self] _, _, _ in
                 guard let self = self else {return}
                 self.updateFilteredTenant()
             }
@@ -86,7 +86,11 @@ final class ModalSearchViewModel: ObservableObject{
         }
         filteredTenants = halalTenants.filter { tenant in
             let isOpen = !(filterVM.selectedTenantCategories.contains {$0 == "Open Now"}) || isCurrentlyOpen(tenant.operationalHours)
-            return /*isPriceValid && */isOpen && (selectedFoodCategories.isEmpty || tenant.foods.contains { food in
+            let price = PriceUtil.getMinPrice(from: tenant.priceRange)
+            let priceRangeOption = PriceUtil.getPriceRangeOption(for: price)
+            let isPriceValid = filterVM.selectedPriceRanges.contains(priceRangeOption)
+            
+            return isOpen && isPriceValid && (selectedFoodCategories.isEmpty || tenant.foods.contains { food in
                 Set(selectedFoodCategories).isSubset(of: Set(food.categories.map { $0.rawValue }))
             })
         }

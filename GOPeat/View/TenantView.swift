@@ -113,7 +113,8 @@ struct TenantView: View {
                         imageSlider(image: sampleImages)
                         
                         // Filter Component
-                        Filter(categories: viewModel.categories, filterMode: FilterMode.tenantView, selectedCategories: $filterVM.selectedCategories)
+                        Filter(categories: viewModel.categories, filterMode: FilterMode.tenantView)
+                            .environmentObject(filterVM)
                             .padding(.horizontal, 20)
                         
                         // List of Food

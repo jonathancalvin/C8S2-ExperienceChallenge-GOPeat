@@ -99,7 +99,8 @@ struct CanteenDetail: View {
                             .font(.caption)
                             .foregroundColor(.secondary)
                         
-                        Filter(categories: viewModel.categories, filterMode: .none,selectedCategories: $filterVM.selectedCategories)
+                        Filter(categories: viewModel.categories, filterMode: .none)
+                            .environmentObject(filterVM)
                     }
                     
                     // Tenants Section

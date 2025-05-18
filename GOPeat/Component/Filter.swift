@@ -10,18 +10,32 @@ import SwiftUI
 struct Filter: View {
     let categories: [String]
     let filterMode: FilterMode
-    @Binding var selectedCategories: [String]
     
-    @State var showPriceFilter: Bool = false
+    @State var showFilterSheet: Bool = false
     @State var showFoodFilter: Bool = false
     @State var showTenantFilter: Bool = false
     @State var showSortByFilter: Bool = false
-
-    var isFilterUsed: Bool {
-        return !(selectedCategories.isEmpty && (filterVM.sortBy == .none))
-    }
+    @State var showPriceRangeFilter: Bool = false
+    
     
     @EnvironmentObject var filterVM: FilterViewModel
+    init(categories: [String], filterMode: FilterMode) {
+        self.categories = categories
+        self.filterMode = filterMode
+    }
+    
+    private var selectedCategories: Binding<[String]> {
+        Binding(
+            get: {filterVM.selectedCategories},
+            set: {filterVM.selectedCategories = $0}
+        )
+    }
+    private var selectedPriceRange: Binding<[PriceRangeOption]> {
+        Binding(
+            get: { filterVM.selectedPriceRanges },
+            set: { filterVM.selectedPriceRanges = $0 }
+        )
+    }
     
     private var sortByOptions: [SortOption] {
         get {
@@ -31,23 +45,32 @@ struct Filter: View {
             return AppStorageManager.shared.allSortByOptions
         }
     }
+    private var priceRangeOptions: [PriceRangeOption] {
+        AppStorageManager.shared.allPriceRangeOptions
+    }
+    
     private var foodCategories: [String] {
         filterVM.selectedFoodCategories
     }
     private var tenantCategories: [String] {
         filterVM.selectedTenantCategories
     }
+    
+    var isFilterUsed: Bool {
+        return !(selectedCategories.isEmpty && (filterVM.sortBy == .none))
+    }
+    
     // Function to return conflicting category
     
     private func conflictingCategory(for category: String) -> String? {
         if category.hasPrefix("Non-") {
             // If start with "Non-", check category without "Non-"
             let conflictCategory = String(category.dropFirst(4))
-            return selectedCategories.contains(conflictCategory) ? conflictCategory : nil
+            return selectedCategories.wrappedValue.contains(conflictCategory) ? conflictCategory : nil
         } else {
             // If start without "Non-", check category with "Non-"
             let conflictCategory = "Non-" + category
-            return selectedCategories.contains(conflictCategory) ? conflictCategory : nil
+            return selectedCategories.wrappedValue.contains(conflictCategory) ? conflictCategory : nil
         }
     }
     var body: some View {
@@ -56,7 +79,8 @@ struct Filter: View {
             if isFilterUsed {
                 Button {
                     filterVM.sortBy = .none
-                    selectedCategories = []
+                    selectedCategories.wrappedValue = []
+                    selectedPriceRange.wrappedValue = AppStorageManager.shared.allPriceRangeOptions
                 } label: {
                     Image(systemName: "x.circle")
                         .resizable()
@@ -67,7 +91,7 @@ struct Filter: View {
             }
             //More Filter Button
             Button {
-                showPriceFilter = true
+                showFilterSheet = true
             } label: {
                 Image(systemName: "line.3.horizontal.decrease.circle")
                     .resizable()
@@ -76,10 +100,12 @@ struct Filter: View {
                     .foregroundStyle(Color("Default"))
                     .opacity(isFilterUsed ? 1 : 0.3)
             }
-            .sheet(isPresented: $showPriceFilter) {
+            .sheet(isPresented: $showFilterSheet) {
                 FilterSheetView(
                     tempSelectedCategories: filterVM.selectedCategories,
-                    selectedOptionRaw: filterVM.sortBy.rawValue
+                    selectedSortOptionRaw: filterVM.sortBy.rawValue,
+                    tempSelectedPriceRange: filterVM.selectedPriceRanges,
+                    filterMode: filterMode
                 )
                 .environmentObject(filterVM)
             }
@@ -90,16 +116,25 @@ struct Filter: View {
                             showFoodFilter = true
                         })
                         .sheet(isPresented: $showFoodFilter) {
-                            FoodFilterView(selectedCategories: $selectedCategories, present: $showFoodFilter)
+                            FoodFilterView(selectedCategories: selectedCategories, present: $showFoodFilter)
                                 .presentationDetents([.fraction(0.35)])
                                 .presentationDragIndicator(.visible)
                         }
                         if filterMode != .tenantView {
+                            FilterButton(name: "Price Range", isSelected: Set(selectedPriceRange.wrappedValue) != Set(priceRangeOptions), action: {
+                                showPriceRangeFilter = true
+                            })
+                            .sheet(isPresented: $showPriceRangeFilter) {
+                                PriceRangeFilterView(options: priceRangeOptions, selectedOptions: selectedPriceRange, showPriceRangeFilter: $showPriceRangeFilter)
+                                    .presentationDetents([.fraction(0.6)])
+                                    .presentationDragIndicator(.visible)
+                            }
+                            
                             FilterButton(name: "Tenant", isSelected:!tenantCategories.isEmpty, action: {
                                 showTenantFilter = true
                             })
                             .sheet(isPresented: $showTenantFilter) {
-                                TenantFilterView(selectedCategories: $selectedCategories, present: $showTenantFilter)
+                                TenantFilterView(selectedCategories: selectedCategories, present: $showTenantFilter)
                                     .presentationDetents([.fraction(0.25)])
                                     .presentationDragIndicator(.visible)
                             }
@@ -111,27 +146,22 @@ struct Filter: View {
                         .sheet(isPresented: $showSortByFilter) {
                             SortByView(options: sortByOptions
                                        ,sortBy: $filterVM.sortBy, present: $showSortByFilter)
-                                .presentationDetents([.fraction(0.42)])
+                            .presentationDetents([(filterMode == .tenantView ? .fraction(0.3):.fraction(0.42))])
                                 .presentationDragIndicator(.visible)
                         }
                         
                     }
                     .padding(5)
                 }
-                .onChange(of: selectedCategories, initial: selectedCategories.isEmpty) { _, _ in
-                    withAnimation {
-                        scrollProxy.scrollTo("scrollStart", anchor: .leading)
-                    }
-                }
-            }.frame(maxHeight: 50)
+            }
+            .frame(maxHeight: 50)
         }
     }
 }
 
 #Preview {
-    @Previewable @State var selectedCategories = ["Halal", "Non-Spicy"]
     @Previewable @StateObject var filterVM = FilterViewModel()
-    Filter(categories: AppStorageManager.shared.foodCategories, filterMode: FilterMode.none, selectedCategories: $selectedCategories)
+    Filter(categories: AppStorageManager.shared.foodCategories, filterMode: FilterMode.none)
         .environmentObject(filterVM)
 
 }

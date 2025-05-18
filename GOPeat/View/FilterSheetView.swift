@@ -11,23 +11,37 @@ struct FilterSheetView: View {
     @Environment(\.dismiss) private var dismiss
     
     @State var tempSelectedCategories: [String]
-    @State var selectedOptionRaw: String
+    @State var selectedSortOptionRaw: String
+    @State var tempSelectedPriceRange: [PriceRangeOption]
 
     @EnvironmentObject var filterVM: FilterViewModel
-    private var selectedOption: SortOption {
-        return SortOption(rawValue: selectedOptionRaw) ?? .none
+    
+    let filterMode: FilterMode
+    private var sortByOptions: [SortOption] {
+        get {
+            if filterMode == .tenantView {
+                return [SortOption.premiumPrice, SortOption.affordablePrice]
+            }
+            return AppStorageManager.shared.allSortByOptions
+        }
+    }
+    private var selectedSortOption: SortOption {
+        return SortOption(rawValue: selectedSortOptionRaw) ?? .none
     }
     private var isDisabled: Bool {
-        return (tempSelectedCategories.isEmpty && (selectedOption == .none))
+        return (tempSelectedCategories.isEmpty && (selectedSortOption == .none) && (Set(filterVM.selectedPriceRanges) == Set(AppStorageManager.shared.allPriceRangeOptions)))
     }
+    
     private func onApply(){
         filterVM.selectedCategories = tempSelectedCategories
-        filterVM.sortBy = selectedOption
+        filterVM.sortBy = selectedSortOption
+        filterVM.selectedPriceRanges = tempSelectedPriceRange
         dismiss()
     }
     private func onClear(){
         filterVM.selectedCategories = []
         filterVM.sortBy = .none
+        filterVM.selectedPriceRanges = AppStorageManager.shared.allPriceRangeOptions
         dismiss()
     }
     var body: some View {
@@ -43,30 +57,43 @@ struct FilterSheetView: View {
                     )
 
                     RadioButtonGroup(
-                        options: AppStorageManager.shared.allSortByOptions.map { $0.rawValue },
+                        options: sortByOptions.map{$0.rawValue},
                         title: "Sort By",
-                        selectedOption: $selectedOptionRaw
+                        selectedOption: $selectedSortOptionRaw
                     )
-                    
-                    CategoryFilter(
-                        categories: AppStorageManager.shared.tenantCategories,
-                        filterMode: .dynamicCategories,
-                        selectedCategories: $tempSelectedCategories,
-                        title: "Tenant",
-                        column: 3
-                    )
+                    if filterMode != .tenantView {
+                        VStack(alignment: .leading) {
+                            Text("Price Range")
+                                .font(.title)
+                                .fontWeight(.bold)
+                            CheckBoxGroup(
+                                options: AppStorageManager.shared.allPriceRangeOptions,
+                                selectedOptions: $tempSelectedPriceRange,
+                                label: PriceRangeFilterView.label
+                            )
+                        }
+                        
+                        CategoryFilter(
+                            categories: AppStorageManager.shared.tenantCategories,
+                            filterMode: .dynamicCategories,
+                            selectedCategories: $tempSelectedCategories,
+                            title: "Tenant",
+                            column: 3
+                        )
+                        Divider()
+                            .frame(height: 2)
+                            .background(.black)
+                    }
 
-                    Divider()
-                        .frame(height: 2)
-                        .background(.black)
 
                     CategoryFilter(
                         categories: AppStorageManager.shared.fixCategories ?? [],
                         filterMode: .fixCategories,
-                        selectedCategories: $filterVM.selectedCategories,
+                        selectedCategories: $tempSelectedCategories,
                         title: "Fix Categories",
                         column: 4
                     )
+                    .padding(.top, 20)
                 }
                 .padding()
             }
@@ -89,7 +116,8 @@ struct FilterSheetView: View {
     @Previewable var filterVM: FilterViewModel = FilterViewModel()
     FilterSheetView(
         tempSelectedCategories: filterVM.selectedCategories,
-        selectedOptionRaw: filterVM.sortBy.rawValue
+        selectedSortOptionRaw: filterVM.sortBy.rawValue, tempSelectedPriceRange: filterVM.selectedPriceRanges,
+        filterMode: .dynamicCategories
     )
     .environmentObject(filterVM)
 }
